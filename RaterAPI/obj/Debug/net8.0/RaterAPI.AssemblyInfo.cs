@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RaterAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+195425a76818274f9755d41b81307e062864e09e")]
 [assembly: System.Reflection.AssemblyProductAttribute("RaterAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RaterAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
