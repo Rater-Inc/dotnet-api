@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\melih\\source\\repos\\RaterAPI\\RaterAPI\\RaterAPI.csproj": {}
+    "C:\\Users\\melih\\Desktop\\RaterAPI\\dotnet-api\\RaterAPI\\RaterAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\melih\\source\\repos\\RaterAPI\\RaterAPI\\RaterAPI.csproj": {
+    "C:\\Users\\melih\\Desktop\\RaterAPI\\dotnet-api\\RaterAPI\\RaterAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\melih\\source\\repos\\RaterAPI\\RaterAPI\\RaterAPI.csproj",
+        "projectUniqueName": "C:\\Users\\melih\\Desktop\\RaterAPI\\dotnet-api\\RaterAPI\\RaterAPI.csproj",
         "projectName": "RaterAPI",
-        "projectPath": "C:\\Users\\melih\\source\\repos\\RaterAPI\\RaterAPI\\RaterAPI.csproj",
+        "projectPath": "C:\\Users\\melih\\Desktop\\RaterAPI\\dotnet-api\\RaterAPI\\RaterAPI.csproj",
         "packagesPath": "C:\\Users\\melih\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\melih\\source\\repos\\RaterAPI\\RaterAPI\\obj\\",
+        "outputPath": "C:\\Users\\melih\\Desktop\\RaterAPI\\dotnet-api\\RaterAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\melih\\AppData\\Roaming\\NuGet\\NuGet.Config",
