@@ -1,0 +1,6 @@
+@Rater.API_HostAddress = http://localhost:5002
+
+GET {{Rater.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
