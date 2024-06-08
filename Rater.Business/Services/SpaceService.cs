@@ -25,5 +25,12 @@ namespace Rater.Business.Services
             var value = await _repo.GetAllSpaces();
             return value;
         }
+
+        public async Task<SpaceResponseDto> CreateSpace(SpaceRequestDto request)
+        {
+            var value = await _repo.CreateSpace(request);
+            return value;
+
+        }
     }
 }

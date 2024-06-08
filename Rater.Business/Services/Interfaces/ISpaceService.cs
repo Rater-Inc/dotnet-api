@@ -11,5 +11,6 @@ namespace Rater.Business.Services.Interfaces
     public interface ISpaceService
     {
         Task<List<SpaceResponseDto>> GetAllSpaces();
+        Task<SpaceResponseDto> CreateSpace(SpaceRequestDto request);
     }
 }
