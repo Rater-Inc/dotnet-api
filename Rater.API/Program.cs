@@ -7,7 +7,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-<<<<<<< HEAD
 builder.Services.AddDbContext<DBBContext>();
 
 
@@ -23,8 +22,6 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
-=======
->>>>>>> 36122e6b7fb77167d7bf2498366706aca10134c4
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
