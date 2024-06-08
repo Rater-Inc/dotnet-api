@@ -12,6 +12,7 @@ namespace Rater.Data.Repositories.Interfaces
     {
 
         Task<List<SpaceResponseDto>> GetAllSpaces();
+        Task<SpaceResponseDto> CreateSpace(SpaceRequestDto request);
 
 
     }
