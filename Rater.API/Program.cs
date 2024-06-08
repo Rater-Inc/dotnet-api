@@ -1,21 +1,4 @@
-using Rater.Business.Services;
-using Rater.Business.Services.Interfaces;
-using Rater.Data.DataContext;
-using System.Text.Json.Serialization;
-using System.Text.Json;
-using Rater.Data.Repositories.Interfaces;
-using Rater.Data.Repositories;
-using Rater.Business.Profiles;
-
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-    options.JsonSerializerOptions.IgnoreNullValues = true;
-    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-    options.JsonSerializerOptions.MaxDepth = 64; // Increase the depth if needed
-});
 
 // Add services to the container.
 
@@ -24,6 +7,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+<<<<<<< HEAD
 builder.Services.AddDbContext<DBBContext>();
 
 
@@ -39,6 +23,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
+=======
+>>>>>>> 36122e6b7fb77167d7bf2498366706aca10134c4
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
