@@ -33,6 +33,9 @@ builder.Services.AddScoped<ISpaceService, SpaceService>();
 builder.Services.AddScoped<IMetricRepository, MetricRepository>();
 builder.Services.AddScoped<IMetricService, MetricService>();
 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
