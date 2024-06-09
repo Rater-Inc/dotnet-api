@@ -1,3 +1,10 @@
+using Rater.Business.Profiles;
+using Rater.Business.Services;
+using Rater.Business.Services.Interfaces;
+using Rater.Data.DataContext;
+using Rater.Data.Repositories;
+using Rater.Data.Repositories.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
