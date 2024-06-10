@@ -1,6 +1,7 @@
 ﻿global using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 using Rater.API;
 
 namespace Rater.Data.DataContext;
@@ -11,9 +12,11 @@ public partial class DBBContext : DbContext
     {
     }
 
-    public DBBContext(DbContextOptions<DBBContext> options)
+    private readonly IConfiguration _config;
+    public DBBContext(DbContextOptions<DBBContext> options , IConfiguration config)
         : base(options)
     {
+        _config = config;
     }
 
     public virtual DbSet<Metric> Metrics { get; set; }
@@ -27,9 +30,11 @@ public partial class DBBContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=localhost;Database=postgres;Username=postgres;Password=1234");
-
+    {
+        var connectionString = _config.GetSection("ConnectionStrings:DefaultConnection").Value;
+        base.OnConfiguring(optionsBuilder);
+        optionsBuilder.UseNpgsql(connectionString);
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasPostgresExtension("pg_catalog", "adminpack");
