@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  webapi:
+    image: rater-api:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8031:8080"
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Database=postgres;Username=admin;Password=pass
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+ 
+
+volumes:
+  pgdata:
