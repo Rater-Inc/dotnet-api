@@ -14,6 +14,8 @@ namespace Rater.Data.Repositories.Interfaces
         Task<List<SpaceResponseDto>> GetAllSpaces();
         Task<SpaceResponseDto> CreateSpace(SpaceRequestDto request);
 
+        Task<bool> SpaceExist(int space_id);
+
 
     }
 }
