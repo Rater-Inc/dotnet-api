@@ -50,5 +50,10 @@ namespace Rater.Data.Repositories
 
         }
 
+        public async Task<bool> SpaceExist(int space_id)
+        {
+            return await _context.Spaces.AnyAsync(e => e.SpaceId == space_id);
+        }
+
     }
 }

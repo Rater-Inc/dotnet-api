@@ -26,6 +26,9 @@ builder.Services.AddScoped<IMetricService, MetricService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+builder.Services.AddScoped<IParticipantRepository, ParticipantRepository>();
+builder.Services.AddScoped<IParticipantService, ParticipantService>();
+
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
