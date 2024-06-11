@@ -22,7 +22,6 @@ namespace Rater.Business.Profiles
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.IsLocked, opt => opt.MapFrom(src => src.IsLocked))
-                .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password))
                 .ForMember(dest => dest.Link, opt => opt.MapFrom(src => src.Link))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
                 .ForMember(dest => dest.Metrics, opt => opt.MapFrom(src => src.Metrics))
