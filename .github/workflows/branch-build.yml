@@ -1,0 +1,31 @@
+name: Branch Build Test Workflow 🛠️
+
+on:
+  pull_request:
+    branches: [ "develop" ]
+
+env:
+  DOTNET_VERSION: '8'
+  
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Restore Dependencies
+      run: dotnet restore Rater.API/Rater.API.csproj
+
+    - name: Build Project
+      run: dotnet build Rater.API/Rater.API.csproj --no-restore
+
+    - name: Run Tests
+      run: dotnet test Rater.API/Rater.API.csproj --no-build --verbosity normal
