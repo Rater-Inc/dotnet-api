@@ -21,8 +21,6 @@ namespace Rater.Domain.DataTransferObjects.SpaceDto
 
         public bool? IsLocked { get; set; }
 
-        public string? Password { get; set; }
-
         public string Link { get; set; } = null!;
 
         public DateTime? CreatedAt { get; set; }

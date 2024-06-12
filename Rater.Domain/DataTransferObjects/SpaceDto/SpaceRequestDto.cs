@@ -9,7 +9,7 @@ namespace Rater.Domain.DataTransferObjects.SpaceDto
 
         public string? Description { get; set; }
 
-        public bool? IsLocked { get; set; }
+        public bool? IsLocked { get; set; } = false!;
 
         public string? Password { get; set; }
     }
