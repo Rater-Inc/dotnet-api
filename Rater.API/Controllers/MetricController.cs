@@ -32,13 +32,5 @@ namespace Rater.API.Controllers
 
             
         }
-
-        [HttpPost("CreateMetrics")]
-        public async Task<ActionResult<List<MetricResponseDto>>> CreateMetrics(List<MetricRequestDto> request)
-        {
-            var value = await _service.CreateMetrics(request);
-            return Ok(value);
-
-        }
     }
 }
