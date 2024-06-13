@@ -18,7 +18,7 @@ namespace Rater.API.Controllers
             _service = service;
         }
 
-        [HttpPost("AddSpace")]
+        [HttpPost("CreateSpace")]
         public async Task<ActionResult<SpaceResponseDto>> AddSpace(GrandSpaceRequestDto request)
         {
             var value  = await _service.AddSpace(request);
