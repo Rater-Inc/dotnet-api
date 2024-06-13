@@ -32,12 +32,5 @@ namespace Rater.API.Controllers
 
             
         }
-
-        [HttpPost("CreateParticipants")]
-        public async Task<ActionResult<List<ParticipantResponseDto>>> CreateParticipants(List<ParticipantRequestDto> request)
-        {
-            var value = await _service.CreateParticipants(request);
-            return Ok(value);
-        }
     }
 }

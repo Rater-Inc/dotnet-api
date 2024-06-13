@@ -18,7 +18,5 @@ namespace Rater.Domain.DataTransferObjects.MetricDto
 
         public string? Description { get; set; }
 
-        public virtual ICollection<RatingForMetricResponseDto> Ratings { get; set; } = new List<RatingForMetricResponseDto>();
-
     }
 }

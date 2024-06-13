@@ -34,6 +34,17 @@ namespace Rater.Business.Profiles
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.IsLocked, opt => opt.MapFrom(src => src.IsLocked))
                 .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password))
+                .ForMember(dest => dest.Metrics, opt => opt.MapFrom(src => src.Metrics))
+                .ForMember(dest => dest.Participants, opt => opt.MapFrom(src => src.Participants))
+                .ReverseMap();
+
+            CreateMap<Space, GrandSpaceRequestDto>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                .ForMember(dest => dest.IsLocked, opt => opt.MapFrom(src => src.IsLocked))
+                .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password))
+                .ForMember(dest => dest.Metrics, opt => opt.MapFrom(src => src.Metrics))
+                .ForMember(dest => dest.Participants, opt => opt.MapFrom(src => src.Participants))
                 .ReverseMap();
 
             //------------------------------------ METRIC DTO'S --------------------------------------------------------------
@@ -44,7 +55,6 @@ namespace Rater.Business.Profiles
                 .ForMember(dest => dest.SpaceId, opt => opt.MapFrom(src => src.SpaceId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-                .ForMember(dest => dest.Ratings, opt => opt.MapFrom(src => src.Ratings))
                 .ReverseMap();
 
             CreateMap<Metric, MetricRequestDto>()

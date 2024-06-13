@@ -36,11 +36,5 @@ namespace Rater.Business.Services
             }
             
         }
-
-        public async Task<List<MetricResponseDto>> CreateMetrics(List<MetricRequestDto> request)
-        {
-            var value = await _metricRepository.CreateMetrics(request);
-            return value;
-        }
     }
 }

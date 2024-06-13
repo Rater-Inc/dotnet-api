@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Rater.Business.Services.Interfaces;
 using Rater.Domain.DataTransferObjects.SpaceDto;
+using Rater.Domain.DataTransferObjects.UserDto;
 
 namespace Rater.API.Controllers
 {
@@ -18,10 +19,11 @@ namespace Rater.API.Controllers
         }
 
         [HttpPost("CreateSpace")]
-        public async Task<ActionResult<SpaceResponseDto>> CreateSpace(SpaceRequestDto request)
+        public async Task<ActionResult<SpaceResponseDto>> AddSpace(GrandSpaceRequestDto request)
         {
-            var value = await _service.CreateSpace(request);
-            return Ok(value);
+            var value  = await _service.AddSpace(request);
+            return value;
+
         }
 
 

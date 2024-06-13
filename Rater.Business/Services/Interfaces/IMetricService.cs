@@ -11,6 +11,5 @@ namespace Rater.Business.Services.Interfaces
     public interface IMetricService
     {
         Task<List<MetricResponseDto>> GetMetrics(int space_id);
-        Task<List<MetricResponseDto>> CreateMetrics(List<MetricRequestDto> request);
     }
 }

@@ -33,6 +33,7 @@ namespace Rater.Data.Repositories
                 .Include(e => e.Metrics)
                 .ThenInclude(e => e.Ratings)
                 .ThenInclude(e => e.Rater)
+                .Include(e => e.Participants)
                 .Select(e => _mapper.Map<SpaceResponseDto>(e))
                 .ToListAsync();
 
