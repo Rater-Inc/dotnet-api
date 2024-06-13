@@ -25,11 +25,5 @@ namespace Rater.Data.Repositories
             var returner = _mapper.Map<UserResponseDto>(user);
             return returner;
         }
-
-        public async Task<int> GetCreatorId(DateTime? dateTime)
-        {
-            var userId = await _context.Users.Where(e => e.CreatedAt == dateTime).FirstOrDefaultAsync();
-            return userId.UserId;
-        }
     }
 }
