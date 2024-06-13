@@ -17,12 +17,12 @@ namespace Rater.Business.Services
     {
 
         private readonly ISpaceRepository _spaceRepo;
-        private readonly IUserRepository _userRepo;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        public SpaceService(ISpaceRepository spaceRepo,IUserRepository userRepo,IMapper mapper)
+        public SpaceService(ISpaceRepository spaceRepo,IUserService userService,IMapper mapper)
         {
             _spaceRepo = spaceRepo;
-            _userRepo = userRepo;
+            _userService = userService;
             _mapper = mapper;
         }
 
@@ -38,11 +38,11 @@ namespace Rater.Business.Services
         {
             UserRequestDto userRequest = new UserRequestDto();
             userRequest.NickName = request.creatorNickname;
-            var justCreatedUser = await _userRepo.AddUser(userRequest);
+            var justCreatedUser = await _userService.CreateUser(userRequest);
 
 
             var space = _mapper.Map<Space>(request);
-            space.CreatorId = await _userRepo.GetCreatorId(justCreatedUser.CreatedAt);
+            space.CreatorId = justCreatedUser.UserId;
 
             foreach (var metrics in space.Metrics)
             {
