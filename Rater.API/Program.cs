@@ -29,6 +29,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IParticipantRepository, ParticipantRepository>();
 builder.Services.AddScoped<IParticipantService, ParticipantService>();
 
+builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+builder.Services.AddScoped<IRatingService, RatingService>();
+
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 
