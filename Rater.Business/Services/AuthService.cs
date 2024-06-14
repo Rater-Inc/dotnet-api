@@ -32,6 +32,7 @@ namespace Rater.Business.Services
                 {
                     response.Success = true;
                     response.jwtToken = CreateToken();
+                    response.space_id = space.SpaceId;
                     return response;
                 }
                 return response;
