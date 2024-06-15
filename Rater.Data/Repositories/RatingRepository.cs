@@ -32,7 +32,7 @@ namespace Rater.Data.Repositories
 
                 if(metric?.SpaceId != x.SpaceId || participant?.SpaceId != x.SpaceId)
                 {
-                    throw new Exception("istekte uyuşmazlık tespit edildi");                                // If participant or metrics are not belong to the given space id.
+                    throw new Exception("The request payload does not match the provided space ID.");
                 }
             }
 
