@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Rater.Business.Services.Interfaces;
 using Rater.Domain.DataTransferObjects.RatingDto;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace Rater.API.Controllers
 {
@@ -17,7 +20,7 @@ namespace Rater.API.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost , Authorize(Policy = "SpaceIdentify")]
         public async Task<ActionResult<List<RatingForMetricResponseDto>>> AddRatings(RatingRequestDto request)
         {
 
@@ -26,9 +29,16 @@ namespace Rater.API.Controllers
                 var value = await _service.AddRatings(request);
                 return value;
             }
+            catch (UnauthorizedAccessException exes)
+            {
+                return Unauthorized(exes.Message);
+            }
             catch (Exception ex) { 
+
                 return BadRequest(ex.Message);
             }
+
+            
 
             
         } 
