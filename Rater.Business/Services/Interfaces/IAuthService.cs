@@ -10,6 +10,6 @@ namespace Rater.Business.Services.Interfaces
     public interface IAuthService
     {
         Task<AuthResponseDto> AuthLobby(string link, string password);
-        string CreateToken();
+        string CreateToken(int space_id);
     }
 }
