@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Rater.Business.Profiles;
@@ -10,6 +11,7 @@ using Rater.Data.Repositories.Interfaces;
 using Swashbuckle.AspNetCore.Filters;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,6 +74,19 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("SpaceIdentify", policy => policy.RequireClaim(ClaimTypes.NameIdentifier));
 });
 
+builder.Services.AddRateLimiter(rateLimiterOptions =>
+{
+    rateLimiterOptions.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    rateLimiterOptions.AddFixedWindowLimiter("fixed" , options =>
+    {
+        options.Window = TimeSpan.FromSeconds(10);
+        options.PermitLimit = 10;
+        options.QueueLimit = 3;
+        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+    });
+});
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
@@ -85,6 +100,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseRateLimiter();
 
 app.UseAuthentication();
 

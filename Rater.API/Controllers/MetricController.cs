@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Rater.Business.Services.Interfaces;
 using Rater.Domain.DataTransferObjects.MetricDto;
 
@@ -17,6 +18,7 @@ namespace Rater.API.Controllers
         }
 
         [HttpGet("GetSpaceMetrics")]
+        [EnableRateLimiting("fixed")]
         public async Task<ActionResult<List<MetricResponseDto>>> GetSpaceMetrics (int space_id)
         {
             try
