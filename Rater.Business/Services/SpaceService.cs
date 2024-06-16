@@ -59,5 +59,23 @@ namespace Rater.Business.Services
 
             return result;
         }
+
+
+
+        public async Task<Space> GetSpace(string link)
+        {
+
+            try
+            {
+                var value = await _spaceRepo.GetSpaceByLink(link);
+                return value;
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            
+        }
     }
 }

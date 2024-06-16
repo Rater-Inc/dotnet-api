@@ -31,7 +31,8 @@ namespace Rater.Business.Services
                 if(BCrypt.Net.BCrypt.Verify(password,space.Password))
                 {
                     response.Success = true;
-                    response.jwtToken = CreateToken();
+                    response.space_id = space.SpaceId;
+                    response.jwtToken = CreateToken(space.SpaceId);
                     return response;
                 }
                 return response;
@@ -43,12 +44,11 @@ namespace Rater.Business.Services
         }
 
 
-        public string CreateToken()
+        public string CreateToken(int space_id)
         {
             List<Claim> claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.Name, "DEFAULT"),
-                new Claim(ClaimTypes.Role, "user")
+                new Claim(ClaimTypes.NameIdentifier , space_id.ToString()),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
