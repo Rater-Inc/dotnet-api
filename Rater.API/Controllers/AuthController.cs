@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Rater.Business.Services.Interfaces;
 using Rater.Domain.DataTransferObjects.AuthDto;
 
@@ -18,6 +19,7 @@ namespace Rater.API.Controllers
 
 
         [HttpPost]
+        [EnableRateLimiting("fixed")]
         public async Task<ActionResult<AuthResponseDto>> AuthSpace (string link,string password) {
 
             try

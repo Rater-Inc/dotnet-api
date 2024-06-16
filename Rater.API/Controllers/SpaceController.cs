@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Rater.Business.Services.Interfaces;
 using Rater.Domain.DataTransferObjects.SpaceDto;
 using Rater.Domain.DataTransferObjects.UserDto;
@@ -19,6 +20,7 @@ namespace Rater.API.Controllers
         }
 
         [HttpPost("CreateSpace")]
+        [EnableRateLimiting("fixed")]
         public async Task<ActionResult<SpaceResponseDto>> AddSpace(GrandSpaceRequestDto request)
         {
             var value  = await _service.AddSpace(request);
@@ -28,6 +30,7 @@ namespace Rater.API.Controllers
 
 
         [HttpGet("GetAllSpaces")]
+        [EnableRateLimiting("fixed")]
         public async Task<ActionResult<List<SpaceResponseDto>>> GetAllSpaces()
         {
             var value = await _service.GetAllSpaces();

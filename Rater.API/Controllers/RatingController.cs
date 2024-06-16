@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Rater.Business.Services.Interfaces;
 using Rater.Domain.DataTransferObjects.RatingDto;
 using System.IdentityModel.Tokens.Jwt;
@@ -21,6 +22,7 @@ namespace Rater.API.Controllers
 
 
         [HttpPost , Authorize(Policy = "SpaceIdentify")]
+        [EnableRateLimiting("fixed")]
         public async Task<ActionResult<List<RatingForMetricResponseDto>>> AddRatings(RatingRequestDto request)
         {
 
