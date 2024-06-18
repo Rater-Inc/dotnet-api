@@ -21,13 +21,12 @@ namespace Rater.Domain.DataTransferObjects.SpaceDto
 
         public bool? IsLocked { get; set; }
 
-        public string? Password { get; set; }
-
         public string Link { get; set; } = null!;
 
         public DateTime? CreatedAt { get; set; }
 
         public virtual ICollection<MetricResponseDto> Metrics { get; set; } = new List<MetricResponseDto>();
+        public virtual ICollection<ParticipantResponseDto> Participants { get; set; } = new List<ParticipantResponseDto>();
 
 
 

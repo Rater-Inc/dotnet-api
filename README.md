@@ -1,1 +1,1 @@
-# Rater .NET API Backend
+# Rater API Backend

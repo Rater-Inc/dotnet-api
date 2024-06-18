@@ -19,12 +19,6 @@ namespace Rater.Business.Services
             _spaceRepository = spaceRepository;
         }
 
-        public async Task<List<ParticipantResponseDto>> CreateParticipants(List<ParticipantRequestDto> request)
-        {
-            var value = await _participantRepository.CreateParticipants(request);
-            return value;
-        }
-
         public async Task<List<ParticipantResponseDto>> GetParticipants(int space_id)
         {
             if(await _spaceRepository.SpaceExist(space_id))

@@ -5,6 +5,7 @@ using AutoMapper;
 using Rater.Domain.DataTransferObjects.SpaceDto;
 using Rater.Domain.DataTransferObjects.MetricDto;
 using RandomString4Net;
+using BCrypt.Net;
 
 
 
@@ -32,6 +33,7 @@ namespace Rater.Data.Repositories
                 .Include(e => e.Metrics)
                 .ThenInclude(e => e.Ratings)
                 .ThenInclude(e => e.Rater)
+                .Include(e => e.Participants)
                 .Select(e => _mapper.Map<SpaceResponseDto>(e))
                 .ToListAsync();
 
@@ -41,6 +43,7 @@ namespace Rater.Data.Repositories
 
         public async Task<SpaceResponseDto> CreateSpace(SpaceRequestDto request)
         {
+            request.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
             var x = _mapper.Map<Space>(request);
             x.Link = RandomString.GetString(Types.ALPHANUMERIC_LOWERCASE);
             await _context.Spaces.AddAsync(x);
@@ -49,6 +52,13 @@ namespace Rater.Data.Repositories
             return result;
 
         }
+
+        public async Task<Space> GetSpaceByLink(string link)
+        {
+            var space = await _context.Spaces.Where(s => s.Link == link).FirstOrDefaultAsync();
+            if (space == null) throw new Exception("Space could not found");
+            return space;
+        } 
 
         public async Task<bool> SpaceExist(int space_id)
         {

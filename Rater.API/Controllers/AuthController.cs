@@ -2,37 +2,37 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Rater.Business.Services.Interfaces;
-using Rater.Domain.DataTransferObjects.MetricDto;
+using Rater.Domain.DataTransferObjects.AuthDto;
 
 namespace Rater.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MetricController : ControllerBase
+    public class AuthController : ControllerBase
     {
 
-        IMetricService _service;
-        public MetricController(IMetricService service)
+        private readonly IAuthService _service;
+        public AuthController(IAuthService service)
         {
             _service = service;
         }
 
-        [HttpGet("GetSpaceMetrics")]
+
+        [HttpPost]
         [EnableRateLimiting("fixed")]
-        public async Task<ActionResult<List<MetricResponseDto>>> GetSpaceMetrics (int space_id)
-        {
+        public async Task<ActionResult<AuthResponseDto>> AuthSpace (string link,string password) {
+
             try
             {
-                var value = await _service.GetMetrics(space_id);
+
+                var value = await _service.AuthLobby(link, password);
                 return Ok(value);
             }
-            catch (Exception ex)
-            {
+
+            catch (Exception ex) { 
                 return BadRequest(ex.Message);
             }
 
-
-            
         }
     }
 }

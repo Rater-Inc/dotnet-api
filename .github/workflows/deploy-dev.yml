@@ -1,0 +1,45 @@
+name: DEV Deployment Workflow 🚀
+
+on:
+  push:
+    branches: [ "develop" ]
+
+env:
+  AZURE_WEBAPP_NAME: rater-api-dev
+  AZURE_WEBAPP_PACKAGE_PATH: "./publish"
+  DOTNET_VERSION: '8'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          
+      - name: Restore
+        run: dotnet restore Rater.API/Rater.API.csproj
+        
+      - name: Build
+        run: dotnet build Rater.API/Rater.API.csproj --configuration Debug --no-restore
+        
+      - name: Publish
+        run: dotnet publish Rater.API/Rater.API.csproj --configuration Debug --no-build --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+
+      - name: App Settings Variable Substitution
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/appsettings.json'
+        env:
+          ConnectionStrings.DefaultConnection: ${{ secrets.POSTGRESQL_DEV_CONNECTION_STRING }}
+        
+      - name: Deployment
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
