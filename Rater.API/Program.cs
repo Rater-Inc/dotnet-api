@@ -89,6 +89,15 @@ builder.Services.AddRateLimiter(rateLimiterOptions =>
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
@@ -100,6 +109,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseRateLimiter();
 
