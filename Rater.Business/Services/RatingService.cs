@@ -67,7 +67,6 @@ namespace Rater.Business.Services
             }
             catch (UnauthorizedAccessException ex)
             {
-                // Re-throw UnauthorizedAccessException so it can be handled separately if needed
                 throw new UnauthorizedAccessException(ex.Message);
             }
 
