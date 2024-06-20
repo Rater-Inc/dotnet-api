@@ -23,24 +23,6 @@ namespace Rater.Data.Repositories
             _mapper = mapper;
         }
 
-
-        public async Task<List<SpaceResponseDto>> GetAllSpaces()
-        {
-            var space = await _context.Spaces
-                .Include(e => e.Metrics)
-                .ThenInclude(e => e.Ratings)
-                .ThenInclude(e => e.Ratee)
-                .Include(e => e.Metrics)
-                .ThenInclude(e => e.Ratings)
-                .ThenInclude(e => e.Rater)
-                .Include(e => e.Participants)
-                .Select(e => _mapper.Map<SpaceResponseDto>(e))
-                .ToListAsync();
-
-            return space;
-
-        }
-
         public async Task<SpaceResponseDto> CreateSpace(SpaceRequestDto request)
         {
             request.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
@@ -55,7 +37,7 @@ namespace Rater.Data.Repositories
 
         public async Task<Space> GetSpaceByLink(string link)
         {
-            var space = await _context.Spaces.Where(s => s.Link == link).FirstOrDefaultAsync();
+            var space = await _context.Spaces.Where(s => s.Link == link).Include(e=> e.Creator).Include(e => e.Metrics).Include(e => e.Participants).FirstOrDefaultAsync();
             if (space == null) throw new Exception("Space could not found");
             return space;
         } 

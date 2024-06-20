@@ -20,7 +20,6 @@ namespace Rater.Business.Services
     public class RatingService : IRatingService
     {
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRatingRepository _repo;
         private readonly IUserService _userService;
         private readonly IJwtTokenService _tokenService;
@@ -68,8 +67,7 @@ namespace Rater.Business.Services
             }
             catch (UnauthorizedAccessException ex)
             {
-                // Re-throw UnauthorizedAccessException so it can be handled separately if needed
-                throw;
+                throw new UnauthorizedAccessException(ex.Message);
             }
 
             catch (Exception ex) {

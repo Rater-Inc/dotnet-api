@@ -26,14 +26,6 @@ namespace Rater.Business.Services
             _mapper = mapper;
         }
 
-
-
-        public async Task<List<SpaceResponseDto>> GetAllSpaces()
-        {
-            var value = await _spaceRepo.GetAllSpaces();
-            return value;
-        }
-
         public async Task<SpaceResponseDto> AddSpace(GrandSpaceRequestDto request)
         {
             UserRequestDto userRequest = new UserRequestDto();
@@ -62,13 +54,14 @@ namespace Rater.Business.Services
 
 
 
-        public async Task<Space> GetSpace(string link)
+        public async Task<SpaceResponseDto> GetSpace(string link)
         {
 
             try
             {
                 var value = await _spaceRepo.GetSpaceByLink(link);
-                return value;
+                var returner = _mapper.Map<SpaceResponseDto>(value);
+                return returner;
             }
 
             catch (Exception ex)
