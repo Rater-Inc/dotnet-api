@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper.Configuration.Annotations;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Rater.Business.Services.Interfaces;
@@ -28,12 +30,11 @@ namespace Rater.API.Controllers
 
         }
 
-
-        [HttpGet("GetAllSpaces")]
+        [HttpPost("GetSpaceByLink"), Authorize(Policy = "SpaceIdentify")]
         [EnableRateLimiting("fixed")]
-        public async Task<ActionResult<List<SpaceResponseDto>>> GetAllSpaces()
+        public async Task<ActionResult<SpaceResponseDto>> GetSpace(string link)
         {
-            var value = await _service.GetAllSpaces();
+            var value = await _service.GetSpace(link);
             return Ok(value);
 
         }
