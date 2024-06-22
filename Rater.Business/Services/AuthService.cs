@@ -31,7 +31,7 @@ namespace Rater.Business.Services
                 if(BCrypt.Net.BCrypt.Verify(password,space.Password))
                 {
                     response.Success = true;
-                    response.space_id = space.SpaceId;
+                    response.spaceId = space.SpaceId;
                     response.jwtToken = CreateToken(space.SpaceId);
                     return response;
                 }
