@@ -16,23 +16,5 @@ namespace Rater.API.Controllers
         {
             _service = service;
         }
-
-        [HttpGet("GetSpaceMetrics")]
-        [EnableRateLimiting("fixed")]
-        public async Task<ActionResult<List<MetricResponseDto>>> GetSpaceMetrics (int space_id)
-        {
-            try
-            {
-                var value = await _service.GetMetrics(space_id);
-                return Ok(value);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
-
-            
-        }
     }
 }

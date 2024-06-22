@@ -15,24 +15,5 @@ namespace Rater.API.Controllers
         {
             _service = service;
         }
-
-
-        [HttpGet("GetParticipants")]
-        [EnableRateLimiting("fixed")]
-        public async Task<ActionResult<List<ParticipantResponseDto>>> GetParticipants(int space_id)
-        {
-
-            try
-            {
-                var value = await _service.GetParticipants(space_id);
-                return Ok(value);
-            }
-            catch (Exception ex) { 
-            
-                return BadRequest(ex.Message);
-            }
-
-            
-        }
     }
 }
