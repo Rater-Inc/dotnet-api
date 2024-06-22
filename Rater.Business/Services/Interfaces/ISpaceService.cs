@@ -1,4 +1,5 @@
 ﻿using Rater.API;
+using Rater.Domain.DataTransferObjects.ResultDto;
 using Rater.Domain.DataTransferObjects.SpaceDto;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,6 @@ namespace Rater.Business.Services.Interfaces
     {
         Task<SpaceResponseDto> AddSpace(GrandSpaceRequestDto request);
         Task<SpaceResponseDto> GetSpace(string link);
+        Task<GrandResultResponseDto> GetSpaceResults(string link);
     }
 }

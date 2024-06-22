@@ -5,7 +5,7 @@ namespace Rater.Data.Repositories.Interfaces
 {
     public interface IMetricRepository
     {
-        Task<List<MetricResponseDto>> GetAllMetrics(int space_id);
+        Task<List<Metric>> GetAllMetrics(int space_id);
         Task<List<MetricResponseDto>> CreateMetrics(List<MetricRequestDto> request);
     }
 }

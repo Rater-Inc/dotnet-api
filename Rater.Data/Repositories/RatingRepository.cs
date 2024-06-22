@@ -54,6 +54,13 @@ namespace Rater.Data.Repositories
             return ratingResponse;
         }
 
+        public async Task<List<Rating>> GetRatings(int space_id)
+        {
+            var ratings = await _context.Ratings.Where(e => e.SpaceId == space_id).ToListAsync();
+            return ratings;
+
+        }
+
 
 
     }

@@ -80,5 +80,12 @@ namespace Rater.Business.Services
 
         }
 
+
+        public async Task<List<Rating>> GetRatings(int space_id)
+        {
+            var ratings = await _repo.GetRatings(space_id);
+            return ratings;
+        }
+
     }
 }
