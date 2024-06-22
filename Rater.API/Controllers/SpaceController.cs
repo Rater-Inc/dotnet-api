@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Rater.Business.Services.Interfaces;
+using Rater.Domain.DataTransferObjects.ResultDto;
 using Rater.Domain.DataTransferObjects.SpaceDto;
 using Rater.Domain.DataTransferObjects.UserDto;
 
@@ -34,8 +35,39 @@ namespace Rater.API.Controllers
         [EnableRateLimiting("fixed")]
         public async Task<ActionResult<SpaceResponseDto>> GetSpace(string link)
         {
-            var value = await _service.GetSpace(link);
-            return Ok(value);
+            try
+            {
+                var value = await _service.GetSpace(link);
+                return Ok(value);
+            }
+            catch(UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            } 
+            catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+            
+
+        }
+
+        [HttpPost("SpaceResults") , Authorize(Policy = "SpaceIdentify")]
+        [EnableRateLimiting("fixed")]
+        public async Task<ActionResult<GrandResultResponseDto>> GetSpaceResults(string link)
+        {
+            try
+            {
+                var value = await _service.GetSpaceResults(link);
+                return Ok(value);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (Exception ex) {
+                return BadRequest(ex.Message);
+            }
+            
 
         }
     }
