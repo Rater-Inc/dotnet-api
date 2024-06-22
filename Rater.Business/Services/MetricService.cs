@@ -22,7 +22,7 @@ namespace Rater.Business.Services
         }
 
 
-        public async Task<List<MetricResponseDto>> GetMetrics(int space_id)
+        public async Task<List<Metric>> GetMetrics(int space_id)
         {
             if (await _spaceRepository.SpaceExist(space_id))
             {
