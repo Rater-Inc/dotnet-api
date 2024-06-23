@@ -1,5 +1,7 @@
 # Rater API Backend
 
+[![DEV Deployment Workflow 🚀](https://github.com/Rater-Inc/dotnet-api/actions/workflows/deploy-dev.yml/badge.svg?branch=develop)](https://github.com/Rater-Inc/dotnet-api/actions/workflows/deploy-dev.yml)
+
 ## Installation and setup 
 
 To run the application on your local machine, make sure you have the following prerequisites installed:
