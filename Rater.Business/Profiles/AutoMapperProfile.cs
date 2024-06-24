@@ -63,9 +63,14 @@ namespace Rater.Business.Profiles
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ReverseMap();
 
-            CreateMap<Metric, MetricResponseForResultDto>()
+            CreateMap<Metric, MetricWinnerDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.MetricId))
+                .ReverseMap();
+
+            CreateMap<Metric, MetricOfParticipantWinnerDto>()
+                .ForMember(dest => dest.MetricId, opt => opt.MapFrom(src => src.MetricId))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ReverseMap();
 
 
@@ -103,6 +108,11 @@ namespace Rater.Business.Profiles
 
             CreateMap<Participant, ParticipantRequestDto>()
                 .ForMember(dest => dest.SpaceId, opt => opt.MapFrom(src => src.SpaceId))
+                .ForMember(dest => dest.ParticipantName, opt => opt.MapFrom(src => src.ParticipantName))
+                .ReverseMap();
+
+            CreateMap<Participant, ParticipantWinnerDto>()
+                .ForMember(dest => dest.ParticipantId, opt => opt.MapFrom(src => src.ParticipantId))
                 .ForMember(dest => dest.ParticipantName, opt => opt.MapFrom(src => src.ParticipantName))
                 .ReverseMap();
 
