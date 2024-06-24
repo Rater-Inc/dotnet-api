@@ -22,6 +22,7 @@ namespace Rater.Business.Services
         private readonly ISpaceRepository _spaceRepo;
         private readonly IUserService _userService;
         private readonly IRatingService _ratingService;
+        private readonly IParticipantService _participantService;
         private readonly IMapper _mapper;
         private readonly IJwtTokenService _tokenService;
         private readonly IMetricService _metricService;
@@ -30,6 +31,7 @@ namespace Rater.Business.Services
             IUserService userService,
             IMetricService metricService,
             IRatingService ratingService,
+            IParticipantService participantService,
             IMapper mapper,
             IJwtTokenService tokenService)
         {
@@ -37,6 +39,7 @@ namespace Rater.Business.Services
             _userService = userService;
             _metricService = metricService;
             _ratingService = ratingService;
+            _participantService = participantService;
             _mapper = mapper;
             _tokenService = tokenService;
         }
@@ -111,12 +114,16 @@ namespace Rater.Business.Services
                 response.Name = space.Name;
 
                 var metrics = await _metricService.GetMetrics(space.SpaceId);
-                var metricResponse = metrics.Select(e => _mapper.Map<MetricResponseForResultDto>(e)).ToList();
-                response.Metrics = metricResponse;
+                var metricResponse = metrics.Select(e => _mapper.Map<MetricWinnerDto>(e)).ToList();
+                response.MetricWinners = metricResponse;
+
+                var participants = await _participantService.GetParticipants(space.SpaceId);
+                var participantResponse = participants.Select(e => _mapper.Map<ParticipantWinnerDto>(e)).ToList();
+                response.ParticipantResults = participantResponse;
 
                 var ratingsInSpace = await _ratingService.GetRatings(space.SpaceId);
 
-                foreach (var metric in response.Metrics)
+                foreach (var metric in response.MetricWinners)
                 {
                     var metricRatings = ratingsInSpace.Where(e => e.MetricId == metric.Id).ToList();
 
@@ -132,15 +139,33 @@ namespace Rater.Business.Services
                             .OrderByDescending(x => x.AverageScore)
                             .FirstOrDefault();
 
-                        metric.Winner = _mapper.Map<ParticipantResponseDto>(averageScore?.Ratee);
+                        metric.WinnerParticipant = _mapper.Map<ParticipantResponseDto>(averageScore?.Ratee);
                         metric.Score = averageScore?.AverageScore ?? 0;
                     }
                     else
                     {
-                        metric.Winner = null;
+                        metric.WinnerParticipant = null;
                         metric.Score = 0;   
                     }
                 }
+
+                foreach (var participant in response.ParticipantResults)
+                {
+                    var onlyParticipantRatings = ratingsInSpace.Where(e => e.RateeId == participant.ParticipantId).ToList();
+                    participant.AverageScore = onlyParticipantRatings.Any() 
+                        ? onlyParticipantRatings.Average(e => e.Score) 
+                        : 0;
+                    participant.Metrics = metrics.Select(e => {
+                        
+                        var metricDto = _mapper.Map<MetricOfParticipantWinnerDto>(e);
+                        var metricRatings = onlyParticipantRatings.Where(r => r.MetricId == e.MetricId).ToList();
+                        metricDto.averageMetricScore = metricRatings.Any() ? metricRatings.Average(r => r.Score) : 0;
+                        return metricDto;
+
+                    }).ToList();
+                }
+
+                response.ParticipantResults = response.ParticipantResults.OrderByDescending(e => e.AverageScore).ToList();
 
                 return response;
             }
