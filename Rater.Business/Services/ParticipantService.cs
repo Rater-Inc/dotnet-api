@@ -1,4 +1,5 @@
-﻿using Rater.Business.Services.Interfaces;
+﻿using Rater.API;
+using Rater.Business.Services.Interfaces;
 using Rater.Data.Repositories.Interfaces;
 using Rater.Domain.DataTransferObjects.ParticipantDto;
 using System;
@@ -19,7 +20,7 @@ namespace Rater.Business.Services
             _spaceRepository = spaceRepository;
         }
 
-        public async Task<List<ParticipantResponseDto>> GetParticipants(int space_id)
+        public async Task<List<Participant>> GetParticipants(int space_id)
         {
             if(await _spaceRepository.SpaceExist(space_id))
             {
