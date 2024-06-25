@@ -37,47 +37,57 @@ namespace Rater.Business.Services
         }
 
 
-        public async Task<List<RatingForMetricResponseDto>> AddRatings(RatingRequestDto request)
+        public async Task<RatingResponseDto> AddRatings(RatingRequestDto request)
         {
+
+            if (_tokenService.GetSpaceIdFromToken() != request.SpaceId)
+            {
+                throw new UnauthorizedAccessException("Unauthorized for this space");
+            }
+
+            if(request.RatingDetails == null || !request.RatingDetails.Any())
+            {
+                throw new ArgumentException("Rating values are empty");
+            }
 
             try
             {
-                if (_tokenService.GetSpaceIdFromToken() != request.SpaceId)
-                {
-                    throw new UnauthorizedAccessException("Unauthorized for this space");
-                }
 
                 UserRequestDto userRequest = new UserRequestDto();
                 userRequest.NickName = request.RaterNickName;
                 var user = await _userService.CreateUser(userRequest);
 
-                var ratings = request?.RatingDetails?.Select(e => _mapper.Map<Rating>(e)).ToList();
-
-                if (ratings == null) throw new Exception("Rating values are empty");
-
-                foreach (var x in ratings)
+                var ratings = request.RatingDetails.Select(e =>
                 {
-                    x.RaterId = user.UserId;
-                    x.SpaceId = request.SpaceId;
+                    var rating = _mapper.Map<Rating>(e);
+                    rating.RaterId = user.UserId;
+                    rating.SpaceId = request.SpaceId;
+                    return rating;
+
+                }).ToList();
+
+                var invalidScores = ratings.Where(e => e.Score <= 0 || e.Score > 5).ToList();
+
+                if (invalidScores.Any()) {
+                    throw new ArgumentException($"Found {invalidScores.Count} scores not between 1 and 5");
                 }
 
                 var returner = await _repo.AddRatings(ratings);
                 return returner;
 
             }
+            catch(InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
             catch (UnauthorizedAccessException ex)
             {
                 throw new UnauthorizedAccessException(ex.Message);
             }
-
             catch (Exception ex) {
 
                 throw new Exception(ex.Message);
             }
-
-
-
-
         }
 
 
