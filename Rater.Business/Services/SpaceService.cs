@@ -114,16 +114,16 @@ namespace Rater.Business.Services
                 response.Name = space.Name;
 
                 var metrics = await _metricService.GetMetrics(space.SpaceId);
-                var metricResponse = metrics.Select(e => _mapper.Map<MetricWinnerDto>(e)).ToList();
-                response.MetricWinners = metricResponse;
+                var metricResponse = metrics.Select(e => _mapper.Map<MetricLeaderDto>(e)).ToList();
+                response.MetricLeaders = metricResponse;
 
                 var participants = await _participantService.GetParticipants(space.SpaceId);
-                var participantResponse = participants.Select(e => _mapper.Map<ParticipantWinnerDto>(e)).ToList();
+                var participantResponse = participants.Select(e => _mapper.Map<PariticipantResultDto>(e)).ToList();
                 response.ParticipantResults = participantResponse;
 
                 var ratingsInSpace = await _ratingService.GetRatings(space.SpaceId);
 
-                foreach (var metric in response.MetricWinners)
+                foreach (var metric in response.MetricLeaders)
                 {
                     var metricRatings = ratingsInSpace.Where(e => e.MetricId == metric.Id).ToList();
 
@@ -139,12 +139,12 @@ namespace Rater.Business.Services
                             .OrderByDescending(x => x.AverageScore)
                             .FirstOrDefault();
 
-                        metric.WinnerParticipant = _mapper.Map<ParticipantResponseDto>(averageScore?.Ratee);
+                        metric.LeaderParticipant = _mapper.Map<ParticipantResponseDto>(averageScore?.Ratee);
                         metric.Score = averageScore?.AverageScore ?? 0;
                     }
                     else
                     {
-                        metric.WinnerParticipant = null;
+                        metric.LeaderParticipant = null;
                         metric.Score = 0;   
                     }
                 }
@@ -155,9 +155,9 @@ namespace Rater.Business.Services
                     participant.AverageScore = onlyParticipantRatings.Any() 
                         ? onlyParticipantRatings.Average(e => e.Score) 
                         : 0;
-                    participant.Metrics = metrics.Select(e => {
-                        
-                        var metricDto = _mapper.Map<MetricOfParticipantWinnerDto>(e);
+                    participant.MetricResults = metrics.Select(e => {
+
+                        var metricDto = _mapper.Map<ParticipantResultMetricDto>(e);
                         var metricRatings = onlyParticipantRatings.Where(r => r.MetricId == e.MetricId).ToList();
                         metricDto.averageMetricScore = metricRatings.Any() ? metricRatings.Average(r => r.Score) : 0;
                         return metricDto;
