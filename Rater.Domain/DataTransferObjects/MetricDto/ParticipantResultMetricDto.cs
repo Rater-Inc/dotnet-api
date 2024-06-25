@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rater.Domain.DataTransferObjects.MetricDto
 {
-    public class MetricOfParticipantWinnerDto
+    public class ParticipantResultMetricDto
     {
         public int MetricId { get; set; }
         public string Name { get; set; } = null!;

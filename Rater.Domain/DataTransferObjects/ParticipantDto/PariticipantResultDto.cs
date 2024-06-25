@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Rater.Domain.DataTransferObjects.ParticipantDto
 {
-    public class ParticipantWinnerDto
+    public class PariticipantResultDto
     {
         public int ParticipantId { get; set; }
         public string ParticipantName { get; set; } = null!;
         public double AverageScore { get; set; }
 
-        public virtual ICollection<MetricOfParticipantWinnerDto> Metrics { get; set; } = new List<MetricOfParticipantWinnerDto>();
+        public List<ParticipantResultMetricDto> MetricResults { get; set; } = new List<ParticipantResultMetricDto>();
 
     }
 }

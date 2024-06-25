@@ -15,9 +15,9 @@ namespace Rater.Domain.DataTransferObjects.ResultDto
 
         public string? Name { get; set; }
 
-        public virtual ICollection<ParticipantWinnerDto> ParticipantResults { get; set; } = new List<ParticipantWinnerDto>();
+        public virtual ICollection<PariticipantResultDto> ParticipantResults { get; set; } = new List<PariticipantResultDto>();
 
-        public virtual ICollection<MetricWinnerDto> MetricWinners { get; set; } = new List<MetricWinnerDto>();
+        public virtual ICollection<MetricLeaderDto> MetricLeaders { get; set; } = new List<MetricLeaderDto>();
         
     }
 }
