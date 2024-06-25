@@ -10,7 +10,7 @@ namespace Rater.Data.Repositories.Interfaces
 {
     public interface IRatingRepository
     {
-        Task<List<RatingForMetricResponseDto>> AddRatings(List<Rating> request);
+        Task<RatingResponseDto> AddRatings(List<Rating> request);
         Task<List<Rating>> GetRatings(int space_id);
     }
 }

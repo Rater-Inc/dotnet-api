@@ -1,5 +1,6 @@
 ﻿using Rater.API;
 using Rater.Domain.DataTransferObjects.MetricDto;
+using Rater.Domain.DataTransferObjects.ParticipantDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,9 @@ namespace Rater.Domain.DataTransferObjects.ResultDto
 
         public string? Name { get; set; }
 
-        public virtual ICollection<MetricResponseForResultDto> Metrics { get; set; } = new List<MetricResponseForResultDto>();
+        public virtual ICollection<PariticipantResultDto> ParticipantResults { get; set; } = new List<PariticipantResultDto>();
+
+        public virtual ICollection<MetricLeaderDto> MetricLeaders { get; set; } = new List<MetricLeaderDto>();
+        
     }
 }

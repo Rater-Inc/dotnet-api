@@ -23,7 +23,7 @@ namespace Rater.API.Controllers
 
         [HttpPost , Authorize(Policy = "SpaceIdentify")]
         [EnableRateLimiting("fixed")]
-        public async Task<ActionResult<List<RatingForMetricResponseDto>>> AddRatings(RatingRequestDto request)
+        public async Task<ActionResult<RatingResponseDto>> AddRatings(RatingRequestDto request)
         {
 
             try
@@ -31,13 +31,22 @@ namespace Rater.API.Controllers
                 var value = await _service.AddRatings(request);
                 return value;
             }
-            catch (UnauthorizedAccessException exes)
+            catch (InvalidOperationException ex)
             {
-                return Unauthorized(exes.Message);
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex.Message);
             }
-            catch (Exception ex) { 
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
 
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex) {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
             
