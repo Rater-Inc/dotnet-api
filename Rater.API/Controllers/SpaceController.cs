@@ -22,7 +22,7 @@ namespace Rater.API.Controllers
             _service = service;
         }
 
-        [HttpPost("CreateSpace")]
+        [HttpPost("create-space")]
         [EnableRateLimiting("fixed")]
         public async Task<ActionResult<SpaceResponseDto>> AddSpace(GrandSpaceRequestDto request)
         {
@@ -31,7 +31,7 @@ namespace Rater.API.Controllers
 
         }
 
-        [HttpPost("GetSpaceByLink"), Authorize(Policy = "SpaceIdentify")]
+        [HttpPost("get-space-by-link"), Authorize(Policy = "SpaceIdentify")]
         [EnableRateLimiting("fixed")]
         public async Task<ActionResult<SpaceResponseDto>> GetSpace(string link)
         {
@@ -51,7 +51,7 @@ namespace Rater.API.Controllers
 
         }
 
-        [HttpPost("SpaceResults") , Authorize(Policy = "SpaceIdentify")]
+        [HttpPost("space-result") , Authorize(Policy = "SpaceIdentify")]
         [EnableRateLimiting("fixed")]
         public async Task<ActionResult<GrandResultResponseDto>> GetSpaceResults(string link)
         {
