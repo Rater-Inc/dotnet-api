@@ -33,9 +33,9 @@ namespace Rater.Data.Repositories
 
         }
 
-        public async Task<List<ParticipantResponseDto>> GetParticipants(int space_id)
+        public async Task<List<Participant>> GetParticipants(int space_id)
         {
-            var participants = await _context.Participants.Where(e => e.SpaceId == space_id).Select(e => _mapper.Map<ParticipantResponseDto>(e)).ToListAsync();
+            var participants = await _context.Participants.Where(e => e.SpaceId == space_id).ToListAsync();
             return participants;
         }
 

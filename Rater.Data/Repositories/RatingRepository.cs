@@ -22,36 +22,45 @@ namespace Rater.Data.Repositories
             _mapper = mapper;
         }
 
-        public async Task<List<RatingForMetricResponseDto>> AddRatings(List<Rating> request)
+        public async Task<RatingResponseDto> AddRatings(List<Rating> request)
         {
-
-            foreach (var x in request)
+            if(request.Any())
             {
-                var metric = await _context.Metrics.Where(e => e.MetricId == x.MetricId).FirstOrDefaultAsync();
-                var participant = await _context.Participants.Where(e => e.ParticipantId == x.RateeId).FirstOrDefaultAsync();
-
-                if(metric?.SpaceId != x.SpaceId || participant?.SpaceId != x.SpaceId)
+                foreach (var x in request)
                 {
-                    throw new Exception("The request payload does not match the provided space ID.");
+                    var metric = await _context.Metrics.Where(e => e.MetricId == x.MetricId).FirstOrDefaultAsync();
+                    var participant = await _context.Participants.Where(e => e.ParticipantId == x.RateeId).FirstOrDefaultAsync();
+
+                    if (metric?.SpaceId != x.SpaceId || participant?.SpaceId != x.SpaceId)
+                    {
+                        throw new InvalidOperationException("The request payload does not match the provided space ID.");
+                    }
                 }
+                await _context.Ratings.AddRangeAsync(request);
+                await _context.SaveChangesAsync();
+
+                var spaceId = request[0].SpaceId;
+
+                return new RatingResponseDto
+                {
+                    success = true,
+                    spaceId = spaceId,
+                    ratingCount = request.Count()
+                };
+
             }
 
-            await _context.Ratings.AddRangeAsync(request);
-            await _context.SaveChangesAsync();
+            else
+            {
+                throw new Exception("Request is empty");
+            }
+        }
 
-            //var ratingResponse = request.Select(e => _mapper.Map<RatingForMetricResponseDto>(e)).ToList(); 
+        public async Task<List<Rating>> GetRatings(int space_id)
+        {
+            var ratings = await _context.Ratings.Where(e => e.SpaceId == space_id).ToListAsync();
+            return ratings;
 
-            var firstRating = request.FirstOrDefault();
-            var spaceID = firstRating?.SpaceId;
-
-            var ratingResponse = await _context.Ratings
-                                        .Where(e => e.SpaceId == spaceID)
-                                        .Include(e => e.Ratee)
-                                        .Include(e => e.Rater)
-                                        .Select(e => _mapper.Map<RatingForMetricResponseDto>(e))
-                                        .ToListAsync();
-
-            return ratingResponse;
         }
 
 

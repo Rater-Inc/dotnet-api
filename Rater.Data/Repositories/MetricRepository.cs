@@ -23,13 +23,12 @@ namespace Rater.Data.Repositories
         }
 
 
-        public async Task<List<MetricResponseDto>> GetAllMetrics(int space_id)
+        public async Task<List<Metric>> GetAllMetrics(int space_id)
         {
 
             var metrics = await _context.Metrics
                 .Where(e => e.SpaceId == space_id)
                 .Include(e => e.Ratings)
-                .Select(e => _mapper.Map<MetricResponseDto>(e) )
                 .ToListAsync();
 
             return metrics;
