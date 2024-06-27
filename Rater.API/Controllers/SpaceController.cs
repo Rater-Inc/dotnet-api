@@ -26,8 +26,19 @@ namespace Rater.API.Controllers
         [EnableRateLimiting("fixed")]
         public async Task<ActionResult<SpaceResponseDto>> AddSpace(GrandSpaceRequestDto request)
         {
-            var value  = await _service.AddSpace(request);
-            return value;
+            try
+            {
+                var value = await _service.AddSpace(request);
+                return value;
+            }
+            catch(ArgumentException ex )
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex) {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            
 
         }
 
