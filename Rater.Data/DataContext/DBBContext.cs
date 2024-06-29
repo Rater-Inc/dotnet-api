@@ -8,9 +8,6 @@ namespace Rater.Data.DataContext;
 
 public partial class DBBContext : DbContext
 {
-    public DBBContext()
-    {
-    }
 
     private readonly IConfiguration _config;
     public DBBContext(DbContextOptions<DBBContext> options , IConfiguration config)
