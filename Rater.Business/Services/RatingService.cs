@@ -40,7 +40,7 @@ namespace Rater.Business.Services
         public async Task<RatingResponseDto> AddRatings(RatingRequestDto request)
         {
 
-            if (_tokenService.GetSpaceIdFromToken() != request.SpaceId)
+            if (_tokenService.GetSpaceIdFromToken() != request.SpaceId || !await _tokenService.ValidateToken())
             {
                 throw new UnauthorizedAccessException("Unauthorized for this space");
             }
