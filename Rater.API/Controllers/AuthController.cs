@@ -28,6 +28,10 @@ namespace Rater.API.Controllers
                 var value = await _service.AuthLobby(link, password);
                 return Ok(value);
             }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest("Invalid operation: " + ex.Message);
+            }
 
             catch (Exception ex) { 
                 return BadRequest(ex.Message);

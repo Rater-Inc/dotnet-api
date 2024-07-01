@@ -25,6 +25,14 @@ namespace Rater.Data.Repositories
 
         public async Task<SpaceResponseDto> CreateSpace(SpaceRequestDto request)
         {
+
+            var duplicateNickName = request.Participants.GroupBy(e => e.ParticipantName).Where(g => g.Count() > 1).Select(g => g.Key).ToList();
+
+            if (duplicateNickName.Any())
+            {
+                throw new ArgumentException("there are same nickname participant in the request");
+            }
+
             request.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
             var x = _mapper.Map<Space>(request);
             x.Link = RandomString.GetString(Types.ALPHANUMERIC_LOWERCASE);

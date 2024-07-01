@@ -78,7 +78,7 @@ namespace Rater.Business.Services
             try
             {
                 var value = await _spaceRepo.GetSpaceByLink(link);
-                if (_tokenService.GetSpaceIdFromToken() != value.SpaceId)
+                if (_tokenService.GetSpaceIdFromToken() != value.SpaceId || !await _tokenService.ValidateToken())
                 {
                     throw new UnauthorizedAccessException("Unauthorized for this space");
                 }
@@ -104,7 +104,7 @@ namespace Rater.Business.Services
             try
             {
                 var space = await _spaceRepo.GetSpaceByLink(link);
-                if(_tokenService.GetSpaceIdFromToken() != space.SpaceId)
+                if(_tokenService.GetSpaceIdFromToken() != space.SpaceId || !await _tokenService.ValidateToken())
                 {
                     throw new UnauthorizedAccessException("Unauthorized for this space");
                 }

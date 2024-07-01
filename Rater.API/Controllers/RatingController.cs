@@ -21,7 +21,7 @@ namespace Rater.API.Controllers
         }
 
 
-        [HttpPost , Authorize(Policy = "SpaceIdentify")]
+        [HttpPost("add-ratings") , Authorize(Policy = "SpaceIdentify")]
         [EnableRateLimiting("fixed")]
         public async Task<ActionResult<RatingResponseDto>> AddRatings(RatingRequestDto request)
         {

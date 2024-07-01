@@ -8,6 +8,8 @@ namespace Rater.Business.Services.Interfaces
 {
     public interface IJwtTokenService
     {
-        int GetSpaceIdFromToken();
+        public int GetSpaceIdFromToken();
+        Task<bool> CreateToken(string token);
+        Task<bool> ValidateToken();
     }
 }
