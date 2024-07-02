@@ -8,6 +8,7 @@ using Rater.Business.Services.Interfaces;
 using Rater.Data.DataContext;
 using Rater.Data.Repositories;
 using Rater.Data.Repositories.Interfaces;
+using StackExchange.Redis;
 using Swashbuckle.AspNetCore.Filters;
 using System.Security.Claims;
 using System.Text;
@@ -31,6 +32,9 @@ builder.Services.AddSwaggerGen(options =>
     });
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
+
+var redisConnectionString = builder.Configuration.GetSection("ConnectionStrings:RedisConnection").Value!;
+builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnectionString));
 
 builder.Services.AddDbContext<DBBContext>();
 
