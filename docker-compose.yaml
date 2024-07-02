@@ -10,9 +10,11 @@ services:
       - "8031:8080"
     depends_on:
       - db
+      - redis
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Host=db;Database=postgres;Username=admin;Password=pass
+      - ConnectionStrings__RedisConnection=redis
 
   db:
     image: postgres:15
@@ -25,7 +27,11 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
- 
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
 
 volumes:
   pgdata:
