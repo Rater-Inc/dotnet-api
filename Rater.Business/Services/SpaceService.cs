@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using Rater.API;
 using Rater.Business.Services.Interfaces;
 using Rater.Data.Repositories.Interfaces;
@@ -24,8 +25,8 @@ namespace Rater.Business.Services
         private readonly IRatingService _ratingService;
         private readonly IParticipantService _participantService;
         private readonly IMapper _mapper;
-        private readonly IJwtTokenService _tokenService;
         private readonly IMetricService _metricService;
+        private readonly IAuthService _authService;
         public SpaceService(
             ISpaceRepository spaceRepo,
             IUserService userService,
@@ -33,7 +34,7 @@ namespace Rater.Business.Services
             IRatingService ratingService,
             IParticipantService participantService,
             IMapper mapper,
-            IJwtTokenService tokenService)
+            IAuthService authService)
         {
             _spaceRepo = spaceRepo;
             _userService = userService;
@@ -41,7 +42,7 @@ namespace Rater.Business.Services
             _ratingService = ratingService;
             _participantService = participantService;
             _mapper = mapper;
-            _tokenService = tokenService;
+            _authService = authService;
         }
 
         public async Task<SpaceResponseDto> AddSpace(GrandSpaceRequestDto request)
@@ -78,10 +79,7 @@ namespace Rater.Business.Services
             try
             {
                 var value = await _spaceRepo.GetSpaceByLink(link);
-                if (_tokenService.GetSpaceIdFromToken() != value.SpaceId || !await _tokenService.ValidateToken())
-                {
-                    throw new UnauthorizedAccessException("Unauthorized for this space");
-                }
+                await _authService.ValidateAuthorization(value.SpaceId);
                 var returner = _mapper.Map<SpaceResponseDto>(value);
                 return returner;
             }
@@ -104,10 +102,7 @@ namespace Rater.Business.Services
             try
             {
                 var space = await _spaceRepo.GetSpaceByLink(link);
-                if(_tokenService.GetSpaceIdFromToken() != space.SpaceId || !await _tokenService.ValidateToken())
-                {
-                    throw new UnauthorizedAccessException("Unauthorized for this space");
-                }
+                await _authService.ValidateAuthorization(space.SpaceId);
 
                 GrandResultResponseDto response = new GrandResultResponseDto();
                 response.SpaceId = space.SpaceId;

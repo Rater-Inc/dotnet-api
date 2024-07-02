@@ -22,28 +22,24 @@ namespace Rater.Business.Services
 
         private readonly IRatingRepository _repo;
         private readonly IUserService _userService;
-        private readonly IJwtTokenService _tokenService;
+        private readonly IAuthService _authService;
         private readonly IMapper _mapper;
         public RatingService(
             IRatingRepository repo,
             IUserService userService,
             IMapper mapper,
-            IJwtTokenService tokenService)
+            IAuthService authService)
         {
             _repo = repo;
             _userService = userService;
             _mapper = mapper;
-            _tokenService = tokenService;
+            _authService = authService;
         }
 
 
         public async Task<RatingResponseDto> AddRatings(RatingRequestDto request)
         {
-
-            if (_tokenService.GetSpaceIdFromToken() != request.SpaceId || !await _tokenService.ValidateToken())
-            {
-                throw new UnauthorizedAccessException("Unauthorized for this space");
-            }
+            await _authService.ValidateAuthorization(request.SpaceId);
 
             if(request.RatingDetails == null || !request.RatingDetails.Any())
             {

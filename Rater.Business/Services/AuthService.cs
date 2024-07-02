@@ -62,18 +62,29 @@ namespace Rater.Business.Services
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 _configuration.GetSection("jwt:Token").Value!));
+            var tokenTTL = Convert.ToInt32(_configuration.GetSection("jwt:jwtTokenTTL").Value);
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddHours(24),
+                expires: DateTime.Now.AddHours(tokenTTL),
                 signingCredentials: creds
                 );
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
+
+        }
+
+
+        public async Task ValidateAuthorization(int spaceId)
+        {
+            if (_tokenService.GetSpaceIdFromToken() != spaceId || !await _tokenService.ValidateToken())
+            {
+                throw new UnauthorizedAccessException("Unauthorized for this space");
+            }
 
         }
 
