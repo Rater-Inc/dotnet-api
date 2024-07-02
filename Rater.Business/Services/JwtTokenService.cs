@@ -12,16 +12,26 @@ namespace Rater.Business.Services
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _config;
-        public JwtTokenService(IHttpContextAccessor httpContextAccessor , IConfiguration config)
+        private readonly IConnectionMultiplexer _redis;
+        public JwtTokenService(IHttpContextAccessor httpContextAccessor , IConfiguration config, IConnectionMultiplexer redis)
         {
             _httpContextAccessor = httpContextAccessor;
             _config = config;
+            _redis = redis;
         }
-        public int GetSpaceIdFromToken ()
+
+        public string GetHeaderToken()
         {
             var authorizationHeader = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"].ToString();
             if (authorizationHeader == null) throw new Exception("Token Could not found");
             var token = authorizationHeader.StartsWith("bearer ") ? authorizationHeader.Substring("bearer ".Length).Trim() : authorizationHeader;
+            return token;
+        }
+
+
+        public int GetSpaceIdFromToken ()
+        {
+            var token = GetHeaderToken();
             var handler = new JwtSecurityTokenHandler();
             var jwtToken = handler.ReadJwtToken(token);
             var claims = jwtToken.Claims.ToList();
@@ -42,12 +52,12 @@ namespace Rater.Business.Services
             try
             {
 
-                using var redis = ConnectionMultiplexer.Connect(redisConnectionString);
-                IDatabase db = redis.GetDatabase();
+                IDatabase db = _redis.GetDatabase();
+                var tokenTTL = Convert.ToInt32(_config.GetSection("jwt:jwtTokenTTL").Value);
 
                 string key = token;
                 string value = "Valid";
-                TimeSpan expiry = TimeSpan.FromHours(24);
+                TimeSpan expiry = TimeSpan.FromHours(tokenTTL);
                 bool setResult = await db.StringSetAsync(key, value, expiry);
 
                 if (!setResult)
@@ -68,9 +78,8 @@ namespace Rater.Business.Services
 
         public async Task<bool> ValidateToken()
         {
-            var authorizationHeader = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"].ToString();
-            if (authorizationHeader == null) throw new Exception("Token Could not found");
-            var token = authorizationHeader.StartsWith("bearer ") ? authorizationHeader.Substring("bearer ".Length).Trim() : authorizationHeader;
+
+            var token = GetHeaderToken();
 
             var redisConnectionString = _config.GetSection("ConnectionStrings:RedisConnection").Value;
             if (string.IsNullOrEmpty(redisConnectionString))
@@ -78,8 +87,8 @@ namespace Rater.Business.Services
 
             try
             {
-                using var redis = ConnectionMultiplexer.Connect(redisConnectionString);
-                IDatabase db = redis.GetDatabase();
+                
+                IDatabase db = _redis.GetDatabase();
 
                 var tokenExist = await db.KeyExistsAsync(token);
                 
