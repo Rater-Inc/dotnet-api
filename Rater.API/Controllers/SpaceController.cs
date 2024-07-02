@@ -42,7 +42,7 @@ namespace Rater.API.Controllers
 
         }
 
-        [HttpPost("get-space-by-link"), Authorize(Policy = "SpaceIdentify")]
+        [HttpPost("get-space"), Authorize(Policy = "SpaceIdentify")]
         [EnableRateLimiting("fixed")]
         public async Task<ActionResult<SpaceResponseDto>> GetSpace(string link)
         {
