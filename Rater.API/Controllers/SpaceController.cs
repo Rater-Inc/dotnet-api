@@ -22,16 +22,27 @@ namespace Rater.API.Controllers
             _service = service;
         }
 
-        [HttpPost("CreateSpace")]
+        [HttpPost("create-space")]
         [EnableRateLimiting("fixed")]
         public async Task<ActionResult<SpaceResponseDto>> AddSpace(GrandSpaceRequestDto request)
         {
-            var value  = await _service.AddSpace(request);
-            return value;
+            try
+            {
+                var value = await _service.AddSpace(request);
+                return value;
+            }
+            catch(ArgumentException ex )
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex) {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+            
 
         }
 
-        [HttpPost("GetSpaceByLink"), Authorize(Policy = "SpaceIdentify")]
+        [HttpPost("get-space"), Authorize(Policy = "SpaceIdentify")]
         [EnableRateLimiting("fixed")]
         public async Task<ActionResult<SpaceResponseDto>> GetSpace(string link)
         {
@@ -51,7 +62,7 @@ namespace Rater.API.Controllers
 
         }
 
-        [HttpPost("SpaceResults") , Authorize(Policy = "SpaceIdentify")]
+        [HttpPost("space-result") , Authorize(Policy = "SpaceIdentify")]
         [EnableRateLimiting("fixed")]
         public async Task<ActionResult<GrandResultResponseDto>> GetSpaceResults(string link)
         {
