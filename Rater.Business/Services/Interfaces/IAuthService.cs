@@ -11,5 +11,6 @@ namespace Rater.Business.Services.Interfaces
     {
         Task<AuthResponseDto> AuthLobby(string link, string password);
         string CreateToken(int space_id);
+        Task ValidateAuthorization(int spaceId);
     }
 }
