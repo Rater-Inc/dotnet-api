@@ -36,6 +36,8 @@ jobs:
           files: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/appsettings.json'
         env:
           ConnectionStrings.DefaultConnection: ${{ secrets.POSTGRESQL_DEV_CONNECTION_STRING }}
+          ConnectionStrings.RedisConnection: ${{ secrets.REDIS_DEV_CONNECTION_STRING }}
+
         
       - name: Deployment
         uses: azure/webapps-deploy@v2
