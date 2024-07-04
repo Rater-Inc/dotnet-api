@@ -40,4 +40,5 @@
 ## Dependencies
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0): The core framework required to build and run the project.
-
+- [PostgreSQL](https://www.postgresql.org): For relational database management.
+- [Redis](https://redis.io): For token caching.
