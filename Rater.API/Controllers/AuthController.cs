@@ -30,7 +30,7 @@ namespace Rater.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest("Invalid operation: " + ex.Message);
+                throw new InvalidOperationException("Invalid operation: " + ex.Message);
             }
 
             catch (Exception ex) { 

@@ -33,20 +33,20 @@ namespace Rater.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex.Message);
+                throw new InvalidOperationException(ex.Message);
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(ex.Message);
+                throw new UnauthorizedAccessException(ex.Message);
             }
             catch (ArgumentException ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new ArgumentException(ex.Message);
             }
             catch (Exception ex) {
 
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                throw new Exception(ex.Message);
             }
 
             

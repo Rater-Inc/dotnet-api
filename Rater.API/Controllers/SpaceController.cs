@@ -33,7 +33,7 @@ namespace Rater.API.Controllers
             }
             catch(ArgumentException ex )
             {
-                return BadRequest(ex.Message);
+                throw new ArgumentException(ex.Message);
             }
             catch (Exception ex) {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
@@ -53,7 +53,7 @@ namespace Rater.API.Controllers
             }
             catch(UnauthorizedAccessException ex)
             {
-                return Unauthorized(ex.Message);
+                throw new UnauthorizedAccessException(ex.Message);
             } 
             catch (Exception ex) {
                 return BadRequest(ex.Message);
@@ -73,7 +73,7 @@ namespace Rater.API.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(ex.Message);
+                throw new UnauthorizedAccessException(ex.Message);
             }
             catch (Exception ex) {
                 return BadRequest(ex.Message);
