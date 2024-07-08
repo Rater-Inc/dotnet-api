@@ -15,14 +15,5 @@ namespace Rater.API.Controllers
         {
             _service = service;
         }
-
-        [HttpPost("create-user")]
-        [EnableRateLimiting("fixed")]
-        public async Task<ActionResult<UserResponseDto>> CreateUser(UserRequestDto request)
-        {
-            var value = await _service.CreateUser(request);
-            return Ok(value);   
-
-        }
     }
 }
