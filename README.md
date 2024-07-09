@@ -1,37 +1,44 @@
 # Rater API Backend
 
-[![DEV Deployment Workflow 🚀](https://github.com/Rater-Inc/dotnet-api/actions/workflows/deploy-dev.yml/badge.svg?branch=develop)](https://github.com/Rater-Inc/dotnet-api/actions/workflows/deploy-dev.yml)
+## Setup Instructions
 
-## Installation and setup 
+1. **Clone the Repository**:
 
-To run the application on your local machine, make sure you have the following prerequisites installed:
+   ```git
+   git https://github.com/Rater-Inc/dotnet-api.git
+   cd dotnet-api
+   ```
 
-- .NET 7 SDK
-- Microsoft SQL Server (recommended)
+2. **Restore Dependencies**:
 
-1. **Clone the repository to your local machine:**
+   ```bash
+   dotnet restore
+   ```
 
-```bash 
-  git clone https://github.com/Rater-Inc/dotnet-api.git
-```
+3. **Build the Project**:
 
-2. **Navigate to the project directory:**
-```bash 
-  cd dotnet-api
-```
+   ```bash
+   dotnet build
+   ```
 
-Remember to add your own connection string and your own token in the appsettings.json file. Otherwise the program will not work properly.
+4. **Run the Project**:
 
-If the project does not recognize Entity Framework, please delete the NuGet package for Entity Framework and reinstall it.
+    Visit http://localhost:8031/swagger/index.html for the API details, Swagger Page.
 
-4. **Run the Project**
+   ```bash
+   dotnet run
+   ```
 
-```bash 
-  dotnet run
-```
+ **Run as a Container**:
 
-### With Docker
+   After this command API will be accessible at 8031 port. Do not forget to pull changes from latest branch!
 
-```bash 
-  docker-compose up --build -d
-```
+   ```bash
+   docker-compose up --build -d
+   ```
+
+## Dependencies
+
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0): The core framework required to build and run the project.
+- [PostgreSQL](https://www.postgresql.org): For relational database management.
+- [Redis](https://redis.io): For token caching.

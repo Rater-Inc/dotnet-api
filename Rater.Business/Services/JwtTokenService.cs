@@ -4,6 +4,7 @@ using Rater.Business.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using StackExchange.Redis;
+using RedLockNet;
 
 namespace Rater.Business.Services
 {
@@ -13,11 +14,16 @@ namespace Rater.Business.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _config;
         private readonly IConnectionMultiplexer _redis;
-        public JwtTokenService(IHttpContextAccessor httpContextAccessor , IConfiguration config, IConnectionMultiplexer redis)
+        private readonly IDistributedLockFactory _distributedLock;
+        public JwtTokenService(IHttpContextAccessor httpContextAccessor , 
+            IConfiguration config, 
+            IConnectionMultiplexer redis,
+            IDistributedLockFactory distributedLock)
         {
             _httpContextAccessor = httpContextAccessor;
             _config = config;
             _redis = redis;
+            _distributedLock = distributedLock;
         }
 
         public string GetHeaderToken()
@@ -52,18 +58,37 @@ namespace Rater.Business.Services
             try
             {
 
-                IDatabase db = _redis.GetDatabase();
-                var tokenTTL = Convert.ToInt32(_config.GetSection("jwt:jwtTokenTTL").Value);
+                var resource = $"lock:token:{token}";
+                var expiry = TimeSpan.FromSeconds(30);
+                var wait = TimeSpan.FromSeconds(10);
+                var retry = TimeSpan.FromSeconds(1);
 
-                string key = token;
-                string value = "Valid";
-                TimeSpan expiry = TimeSpan.FromHours(tokenTTL);
-                bool setResult = await db.StringSetAsync(key, value, expiry);
 
-                if (!setResult)
-                    throw new Exception("Failed to set value in Redis");
+                using(var redLock = await _distributedLock.CreateLockAsync(resource,expiry,wait,retry))
+                {
+                    if(redLock.IsAcquired)
+                    {
+                        IDatabase db = _redis.GetDatabase();
+                        var tokenTTL = Convert.ToInt32(_config.GetSection("jwt:jwtTokenTTL").Value);
 
-                return true;
+                        string key = token;
+                        string value = "Valid";
+                        TimeSpan tokenExpiry = TimeSpan.FromHours(tokenTTL);
+                        bool setResult = await db.StringSetAsync(key, value, tokenExpiry);
+
+                        if (!setResult)
+                            throw new Exception("Failed to set value in Redis");
+
+                        return true;
+                    }
+
+                    else
+                    {
+                        throw new Exception("Failed to acquire lock for token creation");
+                    }
+                }
+
+                
 
             }
             catch (RedisConnectionException ex)
@@ -87,18 +112,33 @@ namespace Rater.Business.Services
 
             try
             {
-                
-                IDatabase db = _redis.GetDatabase();
 
-                var tokenExist = await db.KeyExistsAsync(token);
-                
-                if (tokenExist)
+                var resource = $"lock:token:{token}";
+                var expiry = TimeSpan.FromSeconds(30);
+                var wait = TimeSpan.FromSeconds(10);
+                var retry = TimeSpan.FromSeconds(1);
+
+                using (var redLock = await _distributedLock.CreateLockAsync(resource, expiry, wait, retry))
                 {
-                    await db.KeyDeleteAsync(token);
+                    if(redLock.IsAcquired)
+                    {
+                        IDatabase db = _redis.GetDatabase();
+
+                        var tokenExist = await db.KeyExistsAsync(token);
+
+                        if (tokenExist)
+                        {
+                            await db.KeyDeleteAsync(token);
+                        }
+
+                        return tokenExist;
+                    }
+
+                    else
+                    {
+                        throw new Exception("Failed to acquire lock for token creation");
+                    }
                 }
-
-                return tokenExist;
-
             }
             catch(RedisConnectionException ex)
             {
