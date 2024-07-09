@@ -10,10 +10,19 @@ namespace Rater.Business.Configurations
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<GlobalExceptionHandlingMiddleware> _logger;
+        private readonly Dictionary<Type, HttpStatusCode> _exceptionStatusCodeMapping;
         public GlobalExceptionHandlingMiddleware(RequestDelegate next, ILogger<GlobalExceptionHandlingMiddleware> logger)
         {
             _next = next;
             _logger = logger;
+
+            _exceptionStatusCodeMapping = new Dictionary<Type, HttpStatusCode>
+            {
+                { typeof(UnauthorizedAccessException), HttpStatusCode.Unauthorized },
+                { typeof(InvalidOperationException), HttpStatusCode.BadRequest },
+                { typeof(ArgumentException), HttpStatusCode.BadRequest }
+            };
+
         }
 
         public async Task Invoke (HttpContext context)
@@ -31,49 +40,23 @@ namespace Rater.Business.Configurations
         public async Task HandleExceptionAsync(HttpContext context , Exception ex)
         {
             var exceptionType = ex.GetType();
+            var statusCode = _exceptionStatusCodeMapping.ContainsKey(exceptionType)
+                ? _exceptionStatusCodeMapping[exceptionType]
+                : HttpStatusCode.InternalServerError;
 
-            bool success = false;
-            HttpStatusCode status = HttpStatusCode.InternalServerError;
-            string message = "";
-            string stackTrace = string.Empty;
-
-            if(exceptionType == typeof(UnauthorizedAccessException))
+            var response = new
             {
-                success = false;
-                status = HttpStatusCode.Unauthorized;
-                message = ex.Message;
-                stackTrace = ex.StackTrace ?? string.Empty;
-            }
+                success = false,
+                status = statusCode,
+                message = ex.Message,
+                stackTrace = ex.StackTrace ?? string.Empty
+            };
 
-            else if (exceptionType == typeof(InvalidOperationException))
-            {
-                success = false;
-                status = HttpStatusCode.BadRequest;
-                message = ex.Message;
-                stackTrace = ex.StackTrace ?? string.Empty;
-            }
-            else if (exceptionType == typeof(ArgumentException))
-            {
-                success = false;
-                status = HttpStatusCode.BadRequest;
-                message = ex.Message;
-                stackTrace = ex.StackTrace ?? string.Empty;
-            }
-            else if (exceptionType == typeof(Exception))
-            {
-                success = false;
-                status = HttpStatusCode.BadRequest;
-                message = ex.Message;
-                stackTrace = ex.StackTrace ?? string.Empty;
-            }
+            _logger.LogError(ex, "An error occurred: {Message}, StackTrace: {StackTrace}", response.message, response.stackTrace);
 
-            _logger.LogError(ex, "An error occurred: {Message}, StackTrace: {StackTrace}", message, stackTrace);
-
-
-            var exceptionResult = JsonSerializer.Serialize(new { success, status, message ,stackTrace});
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)status;
-            await context.Response.WriteAsync(exceptionResult);
+            context.Response.StatusCode = (int)statusCode;
+            await context.Response.WriteAsync(JsonSerializer.Serialize(response));
         }
     }
 }
