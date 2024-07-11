@@ -3,9 +3,7 @@ using Rater.Data.Repositories.Interfaces;
 using Rater.Data.DataContext;
 using AutoMapper;
 using Rater.Domain.DataTransferObjects.SpaceDto;
-using Rater.Domain.DataTransferObjects.MetricDto;
 using RandomString4Net;
-using BCrypt.Net;
 
 
 

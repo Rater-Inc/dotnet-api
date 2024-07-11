@@ -1,5 +1,4 @@
-﻿using BCrypt.Net;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Rater.Business.Services.Interfaces;
 using Rater.Data.Repositories.Interfaces;

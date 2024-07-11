@@ -1,12 +1,6 @@
 ﻿using Rater.API;
 using Rater.Business.Services.Interfaces;
 using Rater.Data.Repositories.Interfaces;
-using Rater.Domain.DataTransferObjects.MetricDto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rater.Business.Services
 {

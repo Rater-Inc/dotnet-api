@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
+﻿using Microsoft.AspNetCore.Mvc;
 using Rater.Business.Services.Interfaces;
-using Rater.Domain.DataTransferObjects.UserDto;
 
 namespace Rater.API.Controllers
 {

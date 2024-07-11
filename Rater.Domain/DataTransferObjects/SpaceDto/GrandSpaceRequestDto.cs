@@ -1,11 +1,6 @@
-﻿using Rater.API;
-using Rater.Domain.DataTransferObjects.MetricDto;
+﻿using Rater.Domain.DataTransferObjects.MetricDto;
 using Rater.Domain.DataTransferObjects.ParticipantDto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Rater.Domain.DataTransferObjects.SpaceDto
 {
@@ -18,7 +13,7 @@ namespace Rater.Domain.DataTransferObjects.SpaceDto
         public string? Description { get; set; }
 
         public bool? IsLocked { get; set; } = false!;
-
+        [Required]
         public string? Password { get; set; }
 
         public virtual ICollection<MetricRequestDto> Metrics { get; set; } = new List<MetricRequestDto>();
