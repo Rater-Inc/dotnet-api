@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Net;
-using System.Reflection;
 using System.Text.Json;
 
 namespace Rater.Business.Configurations

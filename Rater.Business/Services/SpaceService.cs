@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
 using Rater.API;
 using Rater.Business.Services.Interfaces;
 using Rater.Data.Repositories.Interfaces;
@@ -9,11 +8,6 @@ using Rater.Domain.DataTransferObjects.ParticipantDto;
 using Rater.Domain.DataTransferObjects.ResultDto;
 using Rater.Domain.DataTransferObjects.SpaceDto;
 using Rater.Domain.DataTransferObjects.UserDto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rater.Business.Services
 {

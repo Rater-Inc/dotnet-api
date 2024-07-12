@@ -51,8 +51,6 @@ namespace Rater.Business.Profiles
 
 
             CreateMap<Metric, MetricResponseDto>()
-                .ForMember(dest => dest.MetricId, opt => opt.MapFrom(src => src.MetricId))
-                .ForMember(dest => dest.SpaceId, opt => opt.MapFrom(src => src.SpaceId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ReverseMap();
@@ -102,7 +100,6 @@ namespace Rater.Business.Profiles
             //------------------------------------ PARTICIPANT DTO'S --------------------------------------------------------------
 
             CreateMap<Participant, ParticipantResponseDto>()
-                .ForMember(dest => dest.ParticipantId, opt => opt.MapFrom(src => src.ParticipantId))
                 .ForMember(dest => dest.ParticipantName, opt => opt.MapFrom(src => src.ParticipantName))
                 .ReverseMap();
 

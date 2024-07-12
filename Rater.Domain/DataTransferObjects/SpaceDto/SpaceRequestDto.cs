@@ -1,5 +1,4 @@
-﻿
-using Rater.Domain.DataTransferObjects.MetricDto;
+﻿using Rater.Domain.DataTransferObjects.MetricDto;
 using Rater.Domain.DataTransferObjects.ParticipantDto;
 
 namespace Rater.Domain.DataTransferObjects.SpaceDto

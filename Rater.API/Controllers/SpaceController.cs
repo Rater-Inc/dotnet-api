@@ -1,12 +1,9 @@
-﻿using AutoMapper.Configuration.Annotations;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Rater.Business.Services.Interfaces;
 using Rater.Domain.DataTransferObjects.ResultDto;
 using Rater.Domain.DataTransferObjects.SpaceDto;
-using Rater.Domain.DataTransferObjects.UserDto;
 
 namespace Rater.API.Controllers
 {
