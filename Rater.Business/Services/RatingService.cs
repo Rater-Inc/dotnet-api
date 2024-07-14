@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Rater.API;
 using Rater.Business.Services.Interfaces;
 using Rater.Data.Repositories.Interfaces;
 using Rater.Domain.DataTransferObjects.RatingDto;
 using Rater.Domain.DataTransferObjects.UserDto;
+using Rater.Domain.Models;
 
 namespace Rater.Business.Services
 {
@@ -45,7 +45,7 @@ namespace Rater.Business.Services
 
                 var ratings = request.RatingDetails.Select(e =>
                 {
-                    var rating = _mapper.Map<Rating>(e);
+                    var rating = _mapper.Map<RatingModel>(e);
                     rating.RaterId = user.UserId;
                     rating.SpaceId = request.SpaceId;
                     return rating;
@@ -77,8 +77,9 @@ namespace Rater.Business.Services
         }
 
 
-        public async Task<List<Rating>> GetRatings(int space_id)
+        public async Task<List<RatingModel>> GetRatings(int space_id)
         {
+            // if(await _spaceRepository.SpaceExist(space_id))
             var ratings = await _repo.GetRatings(space_id);
             return ratings;
         }

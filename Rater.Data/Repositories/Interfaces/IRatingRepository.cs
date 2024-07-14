@@ -1,5 +1,5 @@
-﻿using Rater.API;
-using Rater.Domain.DataTransferObjects.RatingDto;
+﻿using Rater.Domain.DataTransferObjects.RatingDto;
+using Rater.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ namespace Rater.Data.Repositories.Interfaces
 {
     public interface IRatingRepository
     {
-        Task<RatingResponseDto> AddRatings(List<Rating> request);
-        Task<List<Rating>> GetRatings(int space_id);
+        Task<RatingResponseDto> AddRatings(List<RatingModel> request);
+        Task<List<RatingModel>> GetRatings(int space_id);
     }
 }

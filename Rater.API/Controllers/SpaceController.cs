@@ -7,6 +7,7 @@ using Rater.Domain.DataTransferObjects.SpaceDto;
 
 namespace Rater.API.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class SpaceController : ControllerBase

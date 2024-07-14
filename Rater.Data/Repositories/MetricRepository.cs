@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Rater.API;
 using Rater.Data.DataContext;
 using Rater.Data.Repositories.Interfaces;
 using Rater.Domain.DataTransferObjects.MetricDto;
+using Rater.Domain.Models;
 
 namespace Rater.Data.Repositories
 {
@@ -18,7 +18,7 @@ namespace Rater.Data.Repositories
         }
 
 
-        public async Task<List<Metric>> GetAllMetrics(int space_id)
+        public async Task<List<MetricModel>> GetAllMetrics(int space_id)
         {
 
             var metrics = await _context.Metrics
@@ -31,7 +31,7 @@ namespace Rater.Data.Repositories
 
         public async Task<List<MetricResponseDto>> CreateMetrics(List<MetricRequestDto> request)
         {
-            var metrics = request.Select(e => _mapper.Map<Metric>(e)).ToList();
+            var metrics = request.Select(e => _mapper.Map<MetricModel>(e)).ToList();
 
             await _context.Metrics.AddRangeAsync(metrics);
             await _context.SaveChangesAsync();
@@ -40,7 +40,5 @@ namespace Rater.Data.Repositories
             return result;
 
         }
-
-
     }
 }

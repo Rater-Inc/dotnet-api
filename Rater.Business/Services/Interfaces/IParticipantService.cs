@@ -1,5 +1,5 @@
-﻿using Rater.API;
-using Rater.Domain.DataTransferObjects.ParticipantDto;
+﻿using Rater.Domain.DataTransferObjects.ParticipantDto;
+using Rater.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +10,6 @@ namespace Rater.Business.Services.Interfaces
 {
     public interface IParticipantService
     {
-        Task<List<Participant>> GetParticipants(int space_id);
+        Task<List<ParticipantModel>> GetParticipants(int space_id);
     }
 }

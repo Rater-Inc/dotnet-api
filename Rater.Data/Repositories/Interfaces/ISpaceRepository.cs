@@ -1,5 +1,5 @@
-﻿using Rater.API;
-using Rater.Domain.DataTransferObjects.SpaceDto;
+﻿using Rater.Domain.DataTransferObjects.SpaceDto;
+using Rater.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace Rater.Data.Repositories.Interfaces
     {
 
         Task<SpaceResponseDto> CreateSpace(SpaceRequestDto request);
-        Task<Space> GetSpaceByLink(string link);
+        Task<SpaceModel> GetSpaceByLink(string link);
         Task<bool> SpaceExist(int space_id);
 
 

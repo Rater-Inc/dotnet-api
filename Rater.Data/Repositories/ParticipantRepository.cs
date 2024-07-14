@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Rater.API;
 using Rater.Data.DataContext;
 using Rater.Data.Repositories.Interfaces;
 using Rater.Domain.DataTransferObjects.ParticipantDto;
+using Rater.Domain.Models;
 
 namespace Rater.Data.Repositories
 {
@@ -18,7 +18,7 @@ namespace Rater.Data.Repositories
 
         public async Task<List<ParticipantResponseDto>> CreateParticipants(List<ParticipantRequestDto> request)
         {
-            var participants = request.Select(e => _mapper.Map<Participant>(e)).ToList();
+            var participants = request.Select(e => _mapper.Map<ParticipantModel>(e)).ToList();
             await _context.AddRangeAsync(participants);
             await _context.SaveChangesAsync();
 
@@ -28,7 +28,7 @@ namespace Rater.Data.Repositories
 
         }
 
-        public async Task<List<Participant>> GetParticipants(int space_id)
+        public async Task<List<ParticipantModel>> GetParticipants(int space_id)
         {
             var participants = await _context.Participants.Where(e => e.SpaceId == space_id).ToListAsync();
             return participants;

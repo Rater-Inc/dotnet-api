@@ -1,9 +1,10 @@
-﻿using Rater.API;
-using Rater.Data.Repositories.Interfaces;
+﻿using Rater.Data.Repositories.Interfaces;
 using Rater.Data.DataContext;
 using AutoMapper;
 using Rater.Domain.DataTransferObjects.SpaceDto;
 using RandomString4Net;
+using BCrypt.Net;
+using Rater.Domain.Models;
 
 
 
@@ -32,7 +33,7 @@ namespace Rater.Data.Repositories
             }
 
             request.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
-            var x = _mapper.Map<Space>(request);
+            var x = _mapper.Map<SpaceModel>(request);
             x.Link = RandomString.GetString(Types.ALPHANUMERIC_LOWERCASE);
             await _context.Spaces.AddAsync(x);
             await _context.SaveChangesAsync();
@@ -41,17 +42,20 @@ namespace Rater.Data.Repositories
 
         }
 
-        public async Task<Space> GetSpaceByLink(string link)
+        public async Task<SpaceModel> GetSpaceByLink(string link)
         {
-            var space = await _context.Spaces.Where(s => s.Link == link).Include(e=> e.Creator).Include(e => e.Metrics).Include(e => e.Participants).FirstOrDefaultAsync();
+            var space = await _context.Spaces.Where(s => s.Link == link)
+                .Include(e => e.Creator)
+                .Include(e => e.Metrics)
+                .Include(e => e.Participants)
+                .FirstOrDefaultAsync();
             if (space == null) throw new Exception("Space could not found");
             return space;
         } 
 
         public async Task<bool> SpaceExist(int space_id)
         {
-            return await _context.Spaces.AnyAsync(e => e.SpaceId == space_id);
+            return await _context.Spaces.AnyAsync(e => e.Id == space_id);
         }
-
     }
 }

@@ -1,6 +1,5 @@
 ﻿
 
-using Rater.API;
 using Rater.Domain.DataTransferObjects.UserDto;
 
 namespace Rater.Business.Services.Interfaces

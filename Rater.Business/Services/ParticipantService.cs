@@ -1,6 +1,6 @@
-﻿using Rater.API;
-using Rater.Business.Services.Interfaces;
+﻿using Rater.Business.Services.Interfaces;
 using Rater.Data.Repositories.Interfaces;
+using Rater.Domain.Models;
 
 namespace Rater.Business.Services
 {
@@ -14,7 +14,7 @@ namespace Rater.Business.Services
             _spaceRepository = spaceRepository;
         }
 
-        public async Task<List<Participant>> GetParticipants(int space_id)
+        public async Task<List<ParticipantModel>> GetParticipants(int space_id)
         {
             if(await _spaceRepository.SpaceExist(space_id))
             {

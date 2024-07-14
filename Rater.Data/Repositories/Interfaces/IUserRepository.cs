@@ -1,5 +1,4 @@
-﻿using Rater.API;
-using Rater.Domain.DataTransferObjects.UserDto;
+﻿using Rater.Domain.DataTransferObjects.UserDto;
 
 namespace Rater.Data.Repositories.Interfaces
 {

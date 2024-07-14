@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Rater.API;
 using Rater.Business.Services.Interfaces;
 using Rater.Data.Repositories.Interfaces;
 using Rater.Domain.DataTransferObjects.MetricDto;
 using Rater.Domain.DataTransferObjects.ParticipantDto;
 using Rater.Domain.DataTransferObjects.ResultDto;
 using Rater.Domain.DataTransferObjects.SpaceDto;
+using Rater.Domain.Models;
 using Rater.Domain.DataTransferObjects.UserDto;
 
 namespace Rater.Business.Services
@@ -46,17 +46,17 @@ namespace Rater.Business.Services
             var justCreatedUser = await _userService.CreateUser(userRequest);
 
 
-            var space = _mapper.Map<Space>(request);
+            var space = _mapper.Map<SpaceModel>(request);
             space.CreatorId = justCreatedUser.UserId;
 
             foreach (var metrics in space.Metrics)
             {
-                metrics.SpaceId = space.SpaceId;
+                metrics.SpaceId = space.Id;
             }
 
             foreach (var participants in space.Participants)
             {
-                participants.SpaceId = space.SpaceId;
+                participants.SpaceId = space.Id;
             }
 
             var finalRequest = _mapper.Map<SpaceRequestDto>(space);
@@ -73,11 +73,11 @@ namespace Rater.Business.Services
             try
             {
                 var value = await _spaceRepo.GetSpaceByLink(link);
-                await _authService.ValidateAuthorization(value.SpaceId);
+                await _authService.ValidateAuthorization(value.Id);
                 var returner = _mapper.Map<SpaceResponseDto>(value);
                 return returner;
             }
-            catch(UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException ex)
             {
                 throw new UnauthorizedAccessException(ex.Message);
             }
@@ -86,7 +86,7 @@ namespace Rater.Business.Services
             {
                 throw new Exception(ex.Message);
             }
-            
+
         }
 
 
@@ -96,27 +96,29 @@ namespace Rater.Business.Services
             try
             {
                 var space = await _spaceRepo.GetSpaceByLink(link);
-                await _authService.ValidateAuthorization(space.SpaceId);
+                await _authService.ValidateAuthorization(space.Id);
 
-                GrandResultResponseDto response = new GrandResultResponseDto();
-                response.SpaceId = space.SpaceId;
-                response.Name = space.Name;
+                GrandResultResponseDto response = new()
+                {
+                    SpaceId = space.Id,
+                    Name = space.Name
+                };
 
-                var metrics = await _metricService.GetMetrics(space.SpaceId);
+                var metrics = await _metricService.GetMetrics(space.Id);
                 var metricResponse = metrics.Select(e => _mapper.Map<MetricLeaderDto>(e)).ToList();
                 response.MetricLeaders = metricResponse;
 
-                var participants = await _participantService.GetParticipants(space.SpaceId);
+                var participants = await _participantService.GetParticipants(space.Id);
                 var participantResponse = participants.Select(e => _mapper.Map<PariticipantResultDto>(e)).ToList();
                 response.ParticipantResults = participantResponse;
 
-                var ratingsInSpace = await _ratingService.GetRatings(space.SpaceId);
+                var ratingsInSpace = await _ratingService.GetRatings(space.Id);
 
                 foreach (var metric in response.MetricLeaders)
                 {
                     var metricRatings = ratingsInSpace.Where(e => e.MetricId == metric.Id).ToList();
 
-                    if(metricRatings.Any())
+                    if (metricRatings.Any())
                     {
                         var averageScore = metricRatings
                             .GroupBy(e => e.Ratee)
@@ -134,20 +136,21 @@ namespace Rater.Business.Services
                     else
                     {
                         metric.LeaderParticipant = null;
-                        metric.Score = 0;   
+                        metric.Score = 0;
                     }
                 }
 
                 foreach (var participant in response.ParticipantResults)
                 {
                     var onlyParticipantRatings = ratingsInSpace.Where(e => e.RateeId == participant.ParticipantId).ToList();
-                    participant.AverageScore = onlyParticipantRatings.Any() 
-                        ? onlyParticipantRatings.Average(e => e.Score) 
+                    participant.AverageScore = onlyParticipantRatings.Any()
+                        ? onlyParticipantRatings.Average(e => e.Score)
                         : 0;
-                    participant.MetricResults = metrics.Select(e => {
+                    participant.MetricResults = metrics.Select(e =>
+                    {
 
                         var metricDto = _mapper.Map<ParticipantResultMetricDto>(e);
-                        var metricRatings = onlyParticipantRatings.Where(r => r.MetricId == e.MetricId).ToList();
+                        var metricRatings = onlyParticipantRatings.Where(r => r.MetricId == e.Id).ToList();
                         metricDto.averageMetricScore = metricRatings.Any() ? metricRatings.Average(r => r.Score) : 0;
                         return metricDto;
 
@@ -164,18 +167,10 @@ namespace Rater.Business.Services
                 throw new UnauthorizedAccessException(ex.Message);
             }
 
-            catch (Exception ex) {
-
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
-            
             }
-
-
-
         }
-
-
-
-
     }
 }

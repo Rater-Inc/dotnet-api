@@ -14,8 +14,8 @@ namespace Rater.Business.Services
         private readonly ISpaceRepository _spaceRepository;
         private readonly IJwtTokenService _tokenService;
         private readonly IConfiguration _configuration;
-        
-        public AuthService(ISpaceRepository spaceRepository,IJwtTokenService tokenService,IConfiguration configuration)
+
+        public AuthService(ISpaceRepository spaceRepository, IJwtTokenService tokenService, IConfiguration configuration)
         {
             _spaceRepository = spaceRepository;
             _tokenService = tokenService;
@@ -23,32 +23,19 @@ namespace Rater.Business.Services
         }
 
 
-        public async Task<AuthResponseDto> AuthLobby (string link , string password)
+        public async Task<AuthResponseDto> AuthLobby(string link, string password)
         {
 
-            try
-            {
-                AuthResponseDto response = new AuthResponseDto();
-                var space = await _spaceRepository.GetSpaceByLink(link);
-                if(BCrypt.Net.BCrypt.Verify(password,space.Password))
-                {
-                    response.Success = true;
-                    response.spaceId = space.SpaceId;
-                    response.jwtToken = CreateToken(space.SpaceId);
-                    await _tokenService.CreateToken(response.jwtToken);
-                    return response;
-                }
+            AuthResponseDto response = new();
+            var space = await _spaceRepository.GetSpaceByLink(link);
+            if (BCrypt.Net.BCrypt.Verify(password, space.Password) is false) { throw new Exception(""); }
 
-                return response;
+            response.Success = true;
+            response.spaceId = space.Id;
+            response.jwtToken = CreateToken(space.Id);
+            await _tokenService.CreateToken(response.jwtToken);
 
-            }
-            catch(InvalidOperationException ex)
-            {
-                throw new InvalidOperationException(ex.Message);
-            }
-            catch (Exception ex){
-                throw new Exception(ex.Message);
-            }
+            return response;
         }
 
 

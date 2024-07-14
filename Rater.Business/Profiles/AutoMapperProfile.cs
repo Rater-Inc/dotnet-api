@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Rater.API;
 using Rater.Domain.DataTransferObjects.MetricDto;
 using Rater.Domain.DataTransferObjects.ParticipantDto;
 using Rater.Domain.DataTransferObjects.RatingDto;
 using Rater.Domain.DataTransferObjects.SpaceDto;
 using Rater.Domain.DataTransferObjects.UserDto;
+using Rater.Domain.Models;
 
 namespace Rater.Business.Profiles
 {
@@ -16,19 +16,19 @@ namespace Rater.Business.Profiles
             //------------------------------------ SPACE DTO'S --------------------------------------------------------------
 
 
-            CreateMap<Space, SpaceResponseDto>()
-                .ForMember(dest => dest.SpaceId, opt => opt.MapFrom(src => src.SpaceId))
+            CreateMap<SpaceModel, SpaceResponseDto>()
+                .ForMember(dest => dest.SpaceId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.CreatorId, opt => opt.MapFrom(src => src.CreatorId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.IsLocked, opt => opt.MapFrom(src => src.IsLocked))
                 .ForMember(dest => dest.Link, opt => opt.MapFrom(src => src.Link))
-                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedDate))
                 .ForMember(dest => dest.Metrics, opt => opt.MapFrom(src => src.Metrics))
                 .ReverseMap();
 
 
-            CreateMap<Space, SpaceRequestDto>()
+            CreateMap<SpaceModel, SpaceRequestDto>()
                 .ForMember(dest => dest.CreatorId, opt => opt.MapFrom(src => src.CreatorId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
@@ -38,7 +38,7 @@ namespace Rater.Business.Profiles
                 .ForMember(dest => dest.Participants, opt => opt.MapFrom(src => src.Participants))
                 .ReverseMap();
 
-            CreateMap<Space, GrandSpaceRequestDto>()
+            CreateMap<SpaceModel, GrandSpaceRequestDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.IsLocked, opt => opt.MapFrom(src => src.IsLocked))
@@ -50,24 +50,24 @@ namespace Rater.Business.Profiles
             //------------------------------------ METRIC DTO'S --------------------------------------------------------------
 
 
-            CreateMap<Metric, MetricResponseDto>()
+            CreateMap<MetricModel, MetricResponseDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ReverseMap();
 
-            CreateMap<Metric, MetricRequestDto>()
+            CreateMap<MetricModel, MetricRequestDto>()
                 .ForMember(dest => dest.SpaceId, opt => opt.MapFrom(src => src.SpaceId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ReverseMap();
 
-            CreateMap<Metric, MetricLeaderDto>()
+            CreateMap<MetricModel, MetricLeaderDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.MetricId))
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ReverseMap();
 
-            CreateMap<Metric, ParticipantResultMetricDto>()
-                .ForMember(dest => dest.MetricId, opt => opt.MapFrom(src => src.MetricId))
+            CreateMap<MetricModel, ParticipantResultMetricDto>()
+                .ForMember(dest => dest.MetricId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ReverseMap();
 
@@ -75,8 +75,8 @@ namespace Rater.Business.Profiles
             //------------------------------------ RATING DTO'S --------------------------------------------------------------
 
 
-            CreateMap<Rating, RatingForMetricResponseDto>()
-                .ForMember(dest => dest.RatingId, opt => opt.MapFrom(src => src.RatingId))
+            CreateMap<RatingModel, RatingForMetricResponseDto>()
+                .ForMember(dest => dest.RatingId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.RaterId, opt => opt.MapFrom(src => src.RaterId))
                 .ForMember(dest => dest.RateeId, opt => opt.MapFrom(src => src.RateeId))
                 .ForMember(dest => dest.Score, opt => opt.MapFrom(src => src.Score))
@@ -87,7 +87,7 @@ namespace Rater.Business.Profiles
 
 
 
-            CreateMap<Rating, RatingDetailDto>()
+            CreateMap<RatingModel, RatingDetailDto>()
                 .ForMember(dest => dest.RateeId, opt => opt.MapFrom(src => src.RateeId))
                 .ForMember(dest => dest.Score, opt => opt.MapFrom(src => src.Score))
                 .ForMember(dest => dest.MetricId, opt => opt.MapFrom(src => src.MetricId))
@@ -99,37 +99,31 @@ namespace Rater.Business.Profiles
 
             //------------------------------------ PARTICIPANT DTO'S --------------------------------------------------------------
 
-            CreateMap<Participant, ParticipantResponseDto>()
+            CreateMap<ParticipantModel, ParticipantResponseDto>()
                 .ForMember(dest => dest.ParticipantName, opt => opt.MapFrom(src => src.ParticipantName))
                 .ReverseMap();
 
-            CreateMap<Participant, ParticipantRequestDto>()
+            CreateMap<ParticipantModel, ParticipantRequestDto>()
                 .ForMember(dest => dest.SpaceId, opt => opt.MapFrom(src => src.SpaceId))
                 .ForMember(dest => dest.ParticipantName, opt => opt.MapFrom(src => src.ParticipantName))
                 .ReverseMap();
 
-            CreateMap<Participant, PariticipantResultDto>()
-                .ForMember(dest => dest.ParticipantId, opt => opt.MapFrom(src => src.ParticipantId))
+            CreateMap<ParticipantModel, PariticipantResultDto>()
+                .ForMember(dest => dest.ParticipantId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.ParticipantName, opt => opt.MapFrom(src => src.ParticipantName))
                 .ReverseMap();
 
             //------------------------------------ User DTO'S --------------------------------------------------------------
 
-            CreateMap<User, UserResponseDto>()
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+            CreateMap<UserModel, UserResponseDto>()
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Nickname, opt => opt.MapFrom(src => src.Nickname))
-                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.Id))
                 .ReverseMap();
 
-            CreateMap<User, UserRequestDto>()
+            CreateMap<UserModel, UserRequestDto>()
                 .ForMember(dest => dest.NickName, opt => opt.MapFrom(src => src.Nickname))
                 .ReverseMap();
-
-
-
-
-
         }
-
     }
 }

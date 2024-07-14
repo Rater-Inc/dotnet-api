@@ -43,7 +43,7 @@ namespace Rater.Business.Configurations
 
         public static IServiceCollection AddRedisServices(this IServiceCollection services, IConfiguration configuration) {
 
-            var redisConnectionString = configuration.GetSection("ConnectionStrings:RedisConnection").Value!;
+            var redisConnectionString = configuration.GetConnectionString("RedisConnection")!;
             var redis = ConnectionMultiplexer.Connect(redisConnectionString);
             services.AddSingleton<IConnectionMultiplexer>(redis);
 
