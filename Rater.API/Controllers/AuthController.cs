@@ -32,8 +32,8 @@ namespace Rater.API.Controllers
                 throw new InvalidOperationException("Invalid operation: " + ex.Message);
             }
 
-            catch (Exception ex) { 
-                return BadRequest(ex.Message);
+            catch (Exception ex) {
+                throw new Exception(ex.Message);
             }
 
         }
