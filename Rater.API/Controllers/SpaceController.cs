@@ -28,12 +28,16 @@ namespace Rater.API.Controllers
                 var value = await _service.AddSpace(request);
                 return value;
             }
-            catch(ArgumentException ex )
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+            catch (ArgumentException ex )
             {
                 throw new ArgumentException(ex.Message);
             }
             catch (Exception ex) {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                throw new Exception(ex.Message);
             }
             
 
@@ -53,7 +57,7 @@ namespace Rater.API.Controllers
                 throw new UnauthorizedAccessException(ex.Message);
             } 
             catch (Exception ex) {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
             
 
@@ -73,7 +77,7 @@ namespace Rater.API.Controllers
                 throw new UnauthorizedAccessException(ex.Message);
             }
             catch (Exception ex) {
-                return BadRequest(ex.Message);
+                throw new Exception(ex.Message);
             }
             
 

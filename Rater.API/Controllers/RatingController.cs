@@ -45,13 +45,6 @@ namespace Rater.API.Controllers
 
                 throw new Exception(ex.Message);
             }
-
-            
-
-            
         } 
-
-
-
     }
 }
