@@ -6,6 +6,5 @@ namespace Rater.Data.Repositories.UserRepositories
 {
     public interface IUserRepository : IGenericRepository<UserModel>
     {
-        Task<UserResponseDto> AddUserAsync(UserRequestDto request);
     }
 }

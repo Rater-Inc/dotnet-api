@@ -9,8 +9,7 @@ namespace Rater.Business.Services
 {
     public class RatingService : IRatingService
     {
-
-        private readonly IRatingRepository _repo;
+        private readonly IRatingRepository _ratingRepository;
         private readonly IUserService _userService;
         private readonly IAuthService _authService;
         private readonly IMapper _mapper;
@@ -20,69 +19,52 @@ namespace Rater.Business.Services
             IMapper mapper,
             IAuthService authService)
         {
-            _repo = repo;
+            _ratingRepository = repo;
             _userService = userService;
             _mapper = mapper;
             _authService = authService;
         }
 
-
-        public async Task<RatingResponseDto> AddRatings(RatingRequestDto request)
+        public async Task<RatingResponseDto> AddRatingsAsync(RatingRequestDto request)
         {
-            await _authService.ValidateAuthorization(request.SpaceId);
+            await _authService.ValidateAuthorizationAsync(request.SpaceId);
 
-            if(request.RatingDetails == null || !request.RatingDetails.Any())
+            if (request.RatingDetails == null || request.RatingDetails.Count == 0)
             {
                 throw new ArgumentException("Rating values are empty");
             }
 
-            try
+            UserRequestDto userRequest = new()
             {
+                NickName = request.RaterNickName
+            };
 
-                UserRequestDto userRequest = new UserRequestDto();
-                userRequest.NickName = request.RaterNickName;
-                var user = await _userService.CreateUser(userRequest);
+            var user = await _userService.CreateUserAsync(userRequest);
 
-                var ratings = request.RatingDetails.Select(e =>
-                {
-                    var rating = _mapper.Map<RatingModel>(e);
-                    rating.RaterId = user.UserId;
-                    rating.SpaceId = request.SpaceId;
-                    return rating;
-
-                }).ToList();
-
-                var invalidScores = ratings.Where(e => e.Score <= 0 || e.Score > 5).ToList();
-
-                if (invalidScores.Any()) {
-                    throw new ArgumentException($"Found {invalidScores.Count} scores not between 1 and 5");
-                }
-
-                var returner = await _repo.AddRatingsAsync(ratings);
-                return returner;
-
-            }
-            catch(InvalidOperationException ex)
+            var ratings = request.RatingDetails.Select(e =>
             {
-                throw new InvalidOperationException(ex.Message);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                throw new UnauthorizedAccessException(ex.Message);
-            }
-            catch (Exception ex) {
+                var rating = _mapper.Map<RatingModel>(e);
+                rating.RaterId = user.UserId;
+                rating.SpaceId = request.SpaceId;
+                return rating;
 
-                throw new Exception(ex.Message);
+            }).ToList();
+
+            var invalidScores = ratings.Where(e => e.Score <= 0 || e.Score > 5).ToList();
+
+            if (invalidScores.Count != 0)
+            {
+                throw new ArgumentException($"Found {invalidScores.Count} scores not between 1 and 5");
             }
+
+            var returner = await _ratingRepository.AddRatingsAsync(ratings);
+            return returner;
         }
 
-
-        public async Task<List<RatingModel>> GetRatings(int space_id)
+        public async Task<List<RatingModel>> GetRatingsAsync(int spaceId)
         {
-            // if(await _spaceRepository.SpaceExist(space_id))
-            var ratings = await _repo.GetAllRatingsAsync(space_id);
+            var ratings = await _ratingRepository.GetAllRatingsAsync(spaceId);
             return ratings;
         }
-
     }
 }

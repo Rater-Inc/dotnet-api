@@ -8,5 +8,6 @@ namespace Rater.Data.Repositories.SpaceRepositories
     {
         Task<SpaceResponseDto> CreateSpaceAsync(SpaceRequestDto request);
         Task<SpaceModel> GetSpaceByLinkAsync(string link);
+        Task<bool> IsExistAsync(string link);
     }
 }

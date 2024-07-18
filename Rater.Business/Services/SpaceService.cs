@@ -13,14 +13,14 @@ namespace Rater.Business.Services
 {
     public class SpaceService : ISpaceService
     {
-
-        private readonly ISpaceRepository _spaceRepo;
+        private readonly ISpaceRepository _spaceRepository;
         private readonly IUserService _userService;
         private readonly IRatingService _ratingService;
         private readonly IParticipantService _participantService;
         private readonly IMapper _mapper;
         private readonly IMetricService _metricService;
         private readonly IAuthService _authService;
+
         public SpaceService(
             ISpaceRepository spaceRepo,
             IUserService userService,
@@ -30,7 +30,7 @@ namespace Rater.Business.Services
             IMapper mapper,
             IAuthService authService)
         {
-            _spaceRepo = spaceRepo;
+            _spaceRepository = spaceRepo;
             _userService = userService;
             _metricService = metricService;
             _ratingService = ratingService;
@@ -39,12 +39,13 @@ namespace Rater.Business.Services
             _authService = authService;
         }
 
-        public async Task<SpaceResponseDto> AddSpace(GrandSpaceRequestDto request)
+        public async Task<SpaceResponseDto> AddSpaceAsync(GrandSpaceRequestDto request)
         {
-            UserRequestDto userRequest = new UserRequestDto();
-            userRequest.NickName = request.creatorNickname;
-            var justCreatedUser = await _userService.CreateUser(userRequest);
-
+            UserRequestDto userRequest = new()
+            {
+                NickName = request.creatorNickname
+            };
+            var justCreatedUser = await _userService.CreateUserAsync(userRequest);
 
             var space = _mapper.Map<SpaceModel>(request);
             space.CreatorId = justCreatedUser.UserId;
@@ -60,117 +61,93 @@ namespace Rater.Business.Services
             }
 
             var finalRequest = _mapper.Map<SpaceRequestDto>(space);
-            var result = await _spaceRepo.CreateSpaceAsync(finalRequest);
+            var result = await _spaceRepository.CreateSpaceAsync(finalRequest);
 
             return result;
         }
 
-
-
-        public async Task<SpaceResponseDto> GetSpace(string link)
+        public async Task<SpaceResponseDto> GetSpaceAsync(string link)
         {
+            if (await _spaceRepository.IsExistAsync(link) is false) throw new Exception("Space could not found");
 
-            try
-            {
-                var value = await _spaceRepo.GetSpaceByLinkAsync(link);
-                await _authService.ValidateAuthorization(value.Id);
-                var returner = _mapper.Map<SpaceResponseDto>(value);
-                return returner;
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                throw new UnauthorizedAccessException(ex.Message);
-            }
+            var space = await _spaceRepository.GetSpaceByLinkAsync(link);
+            //todo: bunun için custom authorize attribute yazılabilir.
+            await _authService.ValidateAuthorizationAsync(space.Id);
 
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
+            var returner = _mapper.Map<SpaceResponseDto>(space);
+            return returner;
         }
 
-
-        public async Task<GrandResultResponseDto> GetSpaceResults(string link)
+        public async Task<GrandResultResponseDto> GetSpaceResultsAsync(string link)
         {
+            if (await _spaceRepository.IsExistAsync(link) is false) throw new Exception("Space could not found");
 
-            try
+            var space = await _spaceRepository.GetSpaceByLinkAsync(link);
+            //todo: bunun için custom authorize attribute yazılabilir.
+            await _authService.ValidateAuthorizationAsync(space.Id);
+
+            GrandResultResponseDto response = new()
             {
-                var space = await _spaceRepo.GetSpaceByLinkAsync(link);
-                await _authService.ValidateAuthorization(space.Id);
+                SpaceId = space.Id,
+                Name = space.Name
+            };
 
-                GrandResultResponseDto response = new()
+            var metrics = await _metricService.GetMetricsAsync(space.Id);
+            var metricResponse = _mapper.Map<List<MetricLeaderDto>>(metrics);
+            response.MetricLeaders = metricResponse;
+
+            var participants = await _participantService.GetParticipantsAsync(space.Id);
+            var participantResponse = _mapper.Map<List<PariticipantResultDto>>(participants);
+            response.ParticipantResults = participantResponse;
+
+            var ratingsInSpace = await _ratingService.GetRatingsAsync(space.Id);
+
+            foreach (var metric in response.MetricLeaders)
+            {
+                var metricRatings = ratingsInSpace.Where(e => e.MetricId == metric.Id).ToList();
+
+                if (metricRatings.Count != 0)
                 {
-                    SpaceId = space.Id,
-                    Name = space.Name
-                };
+                    var averageScore = metricRatings
+                        .GroupBy(e => e.Ratee)
+                        .Select(g => new
+                        {
+                            Ratee = g.Key,
+                            AverageScore = g.Average(r => r.Score)
+                        })
+                        .OrderByDescending(x => x.AverageScore)
+                        .FirstOrDefault();
 
-                var metrics = await _metricService.GetMetrics(space.Id);
-                var metricResponse = metrics.Select(e => _mapper.Map<MetricLeaderDto>(e)).ToList();
-                response.MetricLeaders = metricResponse;
-
-                var participants = await _participantService.GetParticipants(space.Id);
-                var participantResponse = participants.Select(e => _mapper.Map<PariticipantResultDto>(e)).ToList();
-                response.ParticipantResults = participantResponse;
-
-                var ratingsInSpace = await _ratingService.GetRatings(space.Id);
-
-                foreach (var metric in response.MetricLeaders)
-                {
-                    var metricRatings = ratingsInSpace.Where(e => e.MetricId == metric.Id).ToList();
-
-                    if (metricRatings.Any())
-                    {
-                        var averageScore = metricRatings
-                            .GroupBy(e => e.Ratee)
-                            .Select(g => new
-                            {
-                                Ratee = g.Key,
-                                AverageScore = g.Average(r => r.Score)
-                            })
-                            .OrderByDescending(x => x.AverageScore)
-                            .FirstOrDefault();
-
-                        metric.LeaderParticipant = _mapper.Map<ParticipantResponseDto>(averageScore?.Ratee);
-                        metric.Score = averageScore?.AverageScore ?? 0;
-                    }
-                    else
-                    {
-                        metric.LeaderParticipant = null;
-                        metric.Score = 0;
-                    }
+                    metric.LeaderParticipant = _mapper.Map<ParticipantResponseDto>(averageScore?.Ratee);
+                    metric.Score = averageScore?.AverageScore ?? 0;
                 }
-
-                foreach (var participant in response.ParticipantResults)
+                else
                 {
-                    var onlyParticipantRatings = ratingsInSpace.Where(e => e.RateeId == participant.ParticipantId).ToList();
-                    participant.AverageScore = onlyParticipantRatings.Any()
-                        ? onlyParticipantRatings.Average(e => e.Score)
-                        : 0;
-                    participant.MetricResults = metrics.Select(e =>
-                    {
-
-                        var metricDto = _mapper.Map<ParticipantResultMetricDto>(e);
-                        var metricRatings = onlyParticipantRatings.Where(r => r.MetricId == e.Id).ToList();
-                        metricDto.averageMetricScore = metricRatings.Any() ? metricRatings.Average(r => r.Score) : 0;
-                        return metricDto;
-
-                    }).ToList();
+                    metric.LeaderParticipant = null;
+                    metric.Score = 0;
                 }
-
-                response.ParticipantResults = response.ParticipantResults.OrderByDescending(e => e.AverageScore).ToList();
-
-                return response;
             }
 
-            catch (UnauthorizedAccessException ex)
+            foreach (var participant in response.ParticipantResults)
             {
-                throw new UnauthorizedAccessException(ex.Message);
+                var onlyParticipantRatings = ratingsInSpace.Where(e => e.RateeId == participant.ParticipantId).ToList();
+                participant.AverageScore = onlyParticipantRatings.Any()
+                    ? onlyParticipantRatings.Average(e => e.Score)
+                    : 0;
+                participant.MetricResults = metrics.Select(e =>
+                {
+
+                    var metricDto = _mapper.Map<ParticipantResultMetricDto>(e);
+                    var metricRatings = onlyParticipantRatings.Where(r => r.MetricId == e.Id).ToList();
+                    metricDto.averageMetricScore = metricRatings.Any() ? metricRatings.Average(r => r.Score) : 0;
+                    return metricDto;
+
+                }).ToList();
             }
 
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            response.ParticipantResults = response.ParticipantResults.OrderByDescending(e => e.AverageScore).ToList();
+
+            return response;
         }
     }
 }

@@ -10,13 +10,13 @@ namespace Rater.Business.Services
 {
     public class JwtTokenService : IJwtTokenService
     {
-
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _config;
         private readonly IConnectionMultiplexer _redis;
         private readonly IDistributedLockFactory _distributedLock;
-        public JwtTokenService(IHttpContextAccessor httpContextAccessor , 
-            IConfiguration config, 
+
+        public JwtTokenService(IHttpContextAccessor httpContextAccessor,
+            IConfiguration config,
             IConnectionMultiplexer redis,
             IDistributedLockFactory distributedLock)
         {
@@ -34,8 +34,7 @@ namespace Rater.Business.Services
             return token;
         }
 
-
-        public int GetSpaceIdFromToken ()
+        public int GetSpaceIdFromToken()
         {
             var token = GetHeaderToken();
             var handler = new JwtSecurityTokenHandler();
@@ -49,24 +48,20 @@ namespace Rater.Business.Services
 
         public async Task<bool> CreateToken(string token)
         {
-            
-
-                var redisConnectionString = _config.GetSection("ConnectionStrings:RedisConnection").Value;
-                if (string.IsNullOrEmpty(redisConnectionString))
-                    throw new Exception("Redis connection string is missing in the configuration");
+            var redisConnectionString = _config.GetSection("ConnectionStrings:RedisConnection").Value;
+            if (string.IsNullOrEmpty(redisConnectionString))
+                throw new Exception("Redis connection string is missing in the configuration");
 
             try
             {
-
                 var resource = $"lock:token:{token}";
                 var expiry = TimeSpan.FromSeconds(30);
                 var wait = TimeSpan.FromSeconds(10);
                 var retry = TimeSpan.FromSeconds(1);
 
-
-                using(var redLock = await _distributedLock.CreateLockAsync(resource,expiry,wait,retry))
+                using (var redLock = await _distributedLock.CreateLockAsync(resource, expiry, wait, retry))
                 {
-                    if(redLock.IsAcquired)
+                    if (redLock.IsAcquired)
                     {
                         IDatabase db = _redis.GetDatabase();
                         var tokenTTL = Convert.ToInt32(_config.GetSection("jwt:jwtTokenTTL").Value);
@@ -87,23 +82,19 @@ namespace Rater.Business.Services
                         throw new Exception("Failed to acquire lock for token creation");
                     }
                 }
-
-                
-
             }
             catch (RedisConnectionException ex)
             {
                 throw new InvalidOperationException("Failed to create token due to Redis connection issue", ex);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
             }
         }
 
-
         public async Task<bool> ValidateToken()
         {
-
             var token = GetHeaderToken();
 
             var redisConnectionString = _config.GetSection("ConnectionStrings:RedisConnection").Value;
@@ -112,7 +103,6 @@ namespace Rater.Business.Services
 
             try
             {
-
                 var resource = $"lock:token:{token}";
                 var expiry = TimeSpan.FromSeconds(30);
                 var wait = TimeSpan.FromSeconds(10);
@@ -120,7 +110,7 @@ namespace Rater.Business.Services
 
                 using (var redLock = await _distributedLock.CreateLockAsync(resource, expiry, wait, retry))
                 {
-                    if(redLock.IsAcquired)
+                    if (redLock.IsAcquired)
                     {
                         IDatabase db = _redis.GetDatabase();
 
@@ -140,7 +130,7 @@ namespace Rater.Business.Services
                     }
                 }
             }
-            catch(RedisConnectionException ex)
+            catch (RedisConnectionException ex)
             {
                 throw new InvalidOperationException("Failed to validate token due to Redis connection issue", ex);
             }
@@ -148,8 +138,6 @@ namespace Rater.Business.Services
             {
                 throw new Exception(ex.Message);
             }
-
         }
-
     }
 }

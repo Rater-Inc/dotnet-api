@@ -52,11 +52,14 @@ namespace Rater.Data.Repositories.SpaceRepositories
                 .Include(e => e.Creator)
                 .Include(e => e.Metrics)
                 .Include(e => e.Participants)
-                .FirstOrDefaultAsync(s => s.Link == link);
-            //todo: bunun kontrolu de service altinda olabilir.
-            if (space is null) throw new Exception("Space could not found");
+                .FirstAsync(s => s.Link == link);
 
             return space;
+        }
+
+        public async Task<bool> IsExistAsync(string link)
+        {
+            return await Table.AsNoTracking().AnyAsync(a => a.Link == link);
         }
     }
 }

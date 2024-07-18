@@ -12,9 +12,7 @@ namespace Rater.Business.Profiles
     {
         public AutoMapperProfile()
         {
-
-            //------------------------------------ SPACE DTO'S --------------------------------------------------------------
-
+            #region SPACE DTO'S
 
             CreateMap<SpaceModel, SpaceResponseDto>()
                 .ForMember(dest => dest.SpaceId, opt => opt.MapFrom(src => src.Id))
@@ -47,8 +45,9 @@ namespace Rater.Business.Profiles
                 .ForMember(dest => dest.Participants, opt => opt.MapFrom(src => src.Participants))
                 .ReverseMap();
 
-            //------------------------------------ METRIC DTO'S --------------------------------------------------------------
+            #endregion SPACE DTO'S
 
+            #region METRIC DTO'S
 
             CreateMap<MetricModel, MetricResponseDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
@@ -71,9 +70,9 @@ namespace Rater.Business.Profiles
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ReverseMap();
 
-
-            //------------------------------------ RATING DTO'S --------------------------------------------------------------
-
+            #endregion METRIC DTO'S
+            
+            #region RATING DTO'S
 
             CreateMap<RatingModel, RatingForMetricResponseDto>()
                 .ForMember(dest => dest.RatingId, opt => opt.MapFrom(src => src.Id))
@@ -93,11 +92,9 @@ namespace Rater.Business.Profiles
                 .ForMember(dest => dest.MetricId, opt => opt.MapFrom(src => src.MetricId))
                 .ReverseMap();
 
+            #endregion RATING DTO'S
 
-
-
-
-            //------------------------------------ PARTICIPANT DTO'S --------------------------------------------------------------
+            #region PARTICIPANT DTO'S
 
             CreateMap<ParticipantModel, ParticipantResponseDto>()
                 .ForMember(dest => dest.ParticipantName, opt => opt.MapFrom(src => src.ParticipantName))
@@ -124,6 +121,8 @@ namespace Rater.Business.Profiles
             CreateMap<UserModel, UserRequestDto>()
                 .ForMember(dest => dest.NickName, opt => opt.MapFrom(src => src.Nickname))
                 .ReverseMap();
+
+            #endregion PARTICIPANT DTO'S
         }
     }
 }

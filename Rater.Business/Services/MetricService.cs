@@ -7,7 +7,6 @@ namespace Rater.Business.Services
 {
     public class MetricService : IMetricService
     {
-
         private readonly IMetricRepository _metricRepository;
         private readonly ISpaceRepository _spaceRepository;
         public MetricService(IMetricRepository metricRepository, ISpaceRepository spaceRepository)
@@ -16,8 +15,7 @@ namespace Rater.Business.Services
             _spaceRepository = spaceRepository;
         }
 
-
-        public async Task<List<MetricModel>> GetMetrics(int spaceId)
+        public async Task<List<MetricModel>> GetMetricsAsync(int spaceId)
         {
             if (await _spaceRepository.IsExistAsync(spaceId) is false) { throw new Exception("space does not exist"); }
 

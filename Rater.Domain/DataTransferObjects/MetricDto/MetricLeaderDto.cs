@@ -10,6 +10,5 @@ namespace Rater.Domain.DataTransferObjects.MetricDto
         public double Score { get; set; }
 
         public ParticipantResponseDto? LeaderParticipant { get; set; }
-
     }
 }

@@ -8,6 +8,7 @@ namespace Rater.API.Controllers
     public class ParticipantController : ControllerBase
     {
         private readonly IParticipantService _service;
+
         public ParticipantController(IParticipantService service)
         {
             _service = service;

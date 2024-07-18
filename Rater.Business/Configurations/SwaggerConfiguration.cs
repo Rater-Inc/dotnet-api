@@ -6,12 +6,10 @@ namespace Rater.Business.Configurations
 {
     public static class SwaggerConfiguration
     {
-
         public static IServiceCollection AddSwaggerServices(this IServiceCollection services)
         {
             services.AddSwaggerGen(options =>
             {
-
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Rater API",
@@ -33,9 +31,8 @@ namespace Rater.Business.Configurations
                 });
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
-
+            
             return services;
         }
-
     }
 }

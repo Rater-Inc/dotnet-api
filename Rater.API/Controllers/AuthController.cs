@@ -9,22 +9,20 @@ namespace Rater.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-
         private readonly IAuthService _service;
+
         public AuthController(IAuthService service)
         {
             _service = service;
         }
 
-
         [HttpPost]
         [EnableRateLimiting("fixed")]
-        public async Task<ActionResult<AuthResponseDto>> AuthSpace (string link,string password) {
-
+        public async Task<ActionResult<AuthResponseDto>> AuthSpace(string link, string password)
+        {
             try
             {
-
-                var value = await _service.AuthLobby(link, password);
+                var value = await _service.AuthLobbyAsync(link, password);
                 return Ok(value);
             }
             catch (InvalidOperationException ex)
@@ -32,7 +30,8 @@ namespace Rater.API.Controllers
                 throw new InvalidOperationException("Invalid operation: " + ex.Message);
             }
 
-            catch (Exception ex) { 
+            catch (Exception ex)
+            {
                 return BadRequest(ex.Message);
             }
 

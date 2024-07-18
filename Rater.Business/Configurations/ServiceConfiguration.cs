@@ -50,10 +50,12 @@ namespace Rater.Business.Configurations
 
             var redisConnectionString = configuration.GetConnectionString("RedisConnection")!;
             var redis = ConnectionMultiplexer.Connect(redisConnectionString);
+
             services.AddSingleton<IConnectionMultiplexer>(redis);
 
             var multiplexers = new List<RedLockMultiplexer> { new RedLockMultiplexer(redis) };
             var redlockfactory = RedLockFactory.Create(multiplexers);
+
             services.AddSingleton<IDistributedLockFactory>(redlockfactory);
 
             return services;

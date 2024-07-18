@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Rater.Business.Services.Interfaces;
+using Rater.Data.Repositories.UserRepositories;
 using Rater.Domain.DataTransferObjects.RatingDto;
 
 namespace Rater.API.Controllers
@@ -18,14 +19,13 @@ namespace Rater.API.Controllers
         }
 
 
-        [HttpPost("add-ratings") , Authorize(Policy = "SpaceIdentify")]
+        [HttpPost("add-ratings"), Authorize(Policy = "SpaceIdentify")]
         [EnableRateLimiting("fixed")]
         public async Task<ActionResult<RatingResponseDto>> AddRatings(RatingRequestDto request)
         {
-
             try
             {
-                var value = await _service.AddRatings(request);
+                var value = await _service.AddRatingsAsync(request);
                 return value;
             }
             catch (InvalidOperationException ex)
@@ -41,17 +41,11 @@ namespace Rater.API.Controllers
 
                 throw new ArgumentException(ex.Message);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
 
                 throw new Exception(ex.Message);
             }
-
-            
-
-            
-        } 
-
-
-
+        }
     }
 }

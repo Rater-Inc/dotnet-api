@@ -5,8 +5,8 @@ namespace Rater.Business.Services.Interfaces
 {
     public interface ISpaceService
     {
-        Task<SpaceResponseDto> AddSpace(GrandSpaceRequestDto request);
-        Task<SpaceResponseDto> GetSpace(string link);
-        Task<GrandResultResponseDto> GetSpaceResults(string link);
+        Task<SpaceResponseDto> AddSpaceAsync(GrandSpaceRequestDto request);
+        Task<SpaceResponseDto> GetSpaceAsync(string link);
+        Task<GrandResultResponseDto> GetSpaceResultsAsync(string link);
     }
 }

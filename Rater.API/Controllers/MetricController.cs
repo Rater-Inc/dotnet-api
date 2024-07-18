@@ -7,8 +7,8 @@ namespace Rater.API.Controllers
     [ApiController]
     public class MetricController : ControllerBase
     {
-
         IMetricService _service;
+
         public MetricController(IMetricService service)
         {
             _service = service;

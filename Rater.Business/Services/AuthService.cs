@@ -15,18 +15,21 @@ namespace Rater.Business.Services
         private readonly IJwtTokenService _tokenService;
         private readonly IConfiguration _configuration;
 
-        public AuthService(ISpaceRepository spaceRepository, IJwtTokenService tokenService, IConfiguration configuration)
+        public AuthService(ISpaceRepository spaceRepository,
+                           IJwtTokenService tokenService,
+                           IConfiguration configuration)
         {
             _spaceRepository = spaceRepository;
             _tokenService = tokenService;
             _configuration = configuration;
         }
 
-
-        public async Task<AuthResponseDto> AuthLobby(string link, string password)
+        public async Task<AuthResponseDto> AuthLobbyAsync(string link, string password)
         {
-
             AuthResponseDto response = new();
+
+            if (await _spaceRepository.IsExistAsync(link) is false) throw new Exception("Space could not found");
+
             var space = await _spaceRepository.GetSpaceByLinkAsync(link);
             if (BCrypt.Net.BCrypt.Verify(password, space.Password) is false) { throw new Exception(""); }
 
@@ -38,12 +41,11 @@ namespace Rater.Business.Services
             return response;
         }
 
-
-        public string CreateToken(int space_id)
+        public string CreateToken(int spaceId)
         {
-            List<Claim> claims = new List<Claim>()
+            List<Claim> claims = new()
             {
-                new Claim(ClaimTypes.NameIdentifier , space_id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier , spaceId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
@@ -62,19 +64,14 @@ namespace Rater.Business.Services
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
-
         }
 
-
-        public async Task ValidateAuthorization(int spaceId)
+        public async Task ValidateAuthorizationAsync(int spaceId)
         {
             if (_tokenService.GetSpaceIdFromToken() != spaceId || !await _tokenService.ValidateToken())
             {
                 throw new UnauthorizedAccessException("Unauthorized for this space");
             }
-
         }
-
-
     }
 }
