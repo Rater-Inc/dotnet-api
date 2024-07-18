@@ -3,12 +3,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Rater.Business.Services.Interfaces;
 using Rater.Business.Services;
 using Rater.Data.DataContext;
-using Rater.Data.Repositories.Interfaces;
-using Rater.Data.Repositories;
 using RedLockNet.SERedis.Configuration;
 using RedLockNet.SERedis;
 using RedLockNet;
 using StackExchange.Redis;
+using Rater.Data.Repositories.MetricRepositories;
+using Rater.Data.Repositories.ParticipantRepositories;
+using Rater.Data.Repositories.RatingRepositories;
+using Rater.Data.Repositories.UserRepositories;
+using Rater.Data.Repositories.SpaceRepositories;
+using Rater.Data.Repositories.GenericRepositories;
 
 namespace Rater.Business.Configurations
 {
@@ -18,6 +22,7 @@ namespace Rater.Business.Configurations
         {
             services.AddDbContext<DBBContext>();
 
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             services.AddScoped<ISpaceRepository, SpaceRepository>();
             services.AddScoped<ISpaceService, SpaceService>();

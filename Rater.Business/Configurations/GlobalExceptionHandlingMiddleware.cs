@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System.Net;
 using System.Text.Json;
 
 namespace Rater.Business.Configurations
@@ -9,19 +8,10 @@ namespace Rater.Business.Configurations
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<GlobalExceptionHandlingMiddleware> _logger;
-        private readonly Dictionary<Type, HttpStatusCode> _exceptionStatusCodeMapping;
         public GlobalExceptionHandlingMiddleware(RequestDelegate next, ILogger<GlobalExceptionHandlingMiddleware> logger)
         {
             _next = next;
             _logger = logger;
-
-            _exceptionStatusCodeMapping = new Dictionary<Type, HttpStatusCode>
-            {
-                { typeof(UnauthorizedAccessException), HttpStatusCode.Unauthorized },
-                { typeof(InvalidOperationException), HttpStatusCode.BadRequest },
-                { typeof(ArgumentException), HttpStatusCode.BadRequest }
-            };
-
         }
 
         public async Task Invoke (HttpContext context)
@@ -38,10 +28,13 @@ namespace Rater.Business.Configurations
 
         public async Task HandleExceptionAsync(HttpContext context , Exception ex)
         {
-            var exceptionType = ex.GetType();
-            var statusCode = _exceptionStatusCodeMapping.ContainsKey(exceptionType)
-                ? _exceptionStatusCodeMapping[exceptionType]
-                : HttpStatusCode.InternalServerError;
+            var statusCode = ex switch
+            {
+                UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
+                InvalidOperationException => StatusCodes.Status400BadRequest,
+                ArgumentException => StatusCodes.Status400BadRequest,
+                _ => StatusCodes.Status500InternalServerError
+            };
 
             var response = new
             {
@@ -54,7 +47,7 @@ namespace Rater.Business.Configurations
             _logger.LogError(ex, "An error occurred: {Message}, StackTrace: {StackTrace}", response.message, response.stackTrace);
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)statusCode;
+            context.Response.StatusCode = statusCode;
             await context.Response.WriteAsync(JsonSerializer.Serialize(response));
         }
     }

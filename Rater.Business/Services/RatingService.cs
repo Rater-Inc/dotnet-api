@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Rater.Business.Services.Interfaces;
-using Rater.Data.Repositories.Interfaces;
+using Rater.Data.Repositories.RatingRepositories;
 using Rater.Domain.DataTransferObjects.RatingDto;
 using Rater.Domain.DataTransferObjects.UserDto;
 using Rater.Domain.Models;
@@ -58,7 +58,7 @@ namespace Rater.Business.Services
                     throw new ArgumentException($"Found {invalidScores.Count} scores not between 1 and 5");
                 }
 
-                var returner = await _repo.AddRatings(ratings);
+                var returner = await _repo.AddRatingsAsync(ratings);
                 return returner;
 
             }
@@ -80,7 +80,7 @@ namespace Rater.Business.Services
         public async Task<List<RatingModel>> GetRatings(int space_id)
         {
             // if(await _spaceRepository.SpaceExist(space_id))
-            var ratings = await _repo.GetRatings(space_id);
+            var ratings = await _repo.GetAllRatingsAsync(space_id);
             return ratings;
         }
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Rater.Business.Services.Interfaces;
-using Rater.Data.Repositories.Interfaces;
+using Rater.Data.Repositories.SpaceRepositories;
 using Rater.Domain.DataTransferObjects.AuthDto;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -27,7 +27,7 @@ namespace Rater.Business.Services
         {
 
             AuthResponseDto response = new();
-            var space = await _spaceRepository.GetSpaceByLink(link);
+            var space = await _spaceRepository.GetSpaceByLinkAsync(link);
             if (BCrypt.Net.BCrypt.Verify(password, space.Password) is false) { throw new Exception(""); }
 
             response.Success = true;

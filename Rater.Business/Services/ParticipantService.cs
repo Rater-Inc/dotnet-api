@@ -1,5 +1,6 @@
 ﻿using Rater.Business.Services.Interfaces;
-using Rater.Data.Repositories.Interfaces;
+using Rater.Data.Repositories.ParticipantRepositories;
+using Rater.Data.Repositories.SpaceRepositories;
 using Rater.Domain.Models;
 
 namespace Rater.Business.Services
@@ -14,19 +15,12 @@ namespace Rater.Business.Services
             _spaceRepository = spaceRepository;
         }
 
-        public async Task<List<ParticipantModel>> GetParticipants(int space_id)
+        public async Task<List<ParticipantModel>> GetParticipants(int spaceId)
         {
-            if(await _spaceRepository.SpaceExist(space_id))
-            {
-                var value = await _participantRepository.GetParticipants(space_id);
-                return value;
+            if (await _spaceRepository.IsExistAsync(spaceId) is false) { throw new Exception("space does not exist"); }
 
-            }
-
-            else
-            {
-                throw new Exception("space does not exist");
-            }
+            var value = await _participantRepository.GetAllParticipantsAsync(spaceId);
+            return value;
         }
     }
 }

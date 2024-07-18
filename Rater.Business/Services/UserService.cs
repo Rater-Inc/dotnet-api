@@ -1,5 +1,5 @@
 ﻿using Rater.Business.Services.Interfaces;
-using Rater.Data.Repositories.Interfaces;
+using Rater.Data.Repositories.UserRepositories;
 using Rater.Domain.DataTransferObjects.UserDto;
 
 namespace Rater.Business.Services
@@ -15,7 +15,7 @@ namespace Rater.Business.Services
 
         public async Task<UserResponseDto> CreateUser(UserRequestDto request)
         {
-            var value = await _repo.AddUser(request);
+            var value = await _repo.AddUserAsync(request);
             return value;
         }
     }

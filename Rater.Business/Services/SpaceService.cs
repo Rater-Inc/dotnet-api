@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Rater.Business.Services.Interfaces;
-using Rater.Data.Repositories.Interfaces;
 using Rater.Domain.DataTransferObjects.MetricDto;
 using Rater.Domain.DataTransferObjects.ParticipantDto;
 using Rater.Domain.DataTransferObjects.ResultDto;
 using Rater.Domain.DataTransferObjects.SpaceDto;
 using Rater.Domain.Models;
 using Rater.Domain.DataTransferObjects.UserDto;
+using Rater.Data.Repositories.SpaceRepositories;
 
 namespace Rater.Business.Services
 {
@@ -60,7 +60,7 @@ namespace Rater.Business.Services
             }
 
             var finalRequest = _mapper.Map<SpaceRequestDto>(space);
-            var result = await _spaceRepo.CreateSpace(finalRequest);
+            var result = await _spaceRepo.CreateSpaceAsync(finalRequest);
 
             return result;
         }
@@ -72,7 +72,7 @@ namespace Rater.Business.Services
 
             try
             {
-                var value = await _spaceRepo.GetSpaceByLink(link);
+                var value = await _spaceRepo.GetSpaceByLinkAsync(link);
                 await _authService.ValidateAuthorization(value.Id);
                 var returner = _mapper.Map<SpaceResponseDto>(value);
                 return returner;
@@ -95,7 +95,7 @@ namespace Rater.Business.Services
 
             try
             {
-                var space = await _spaceRepo.GetSpaceByLink(link);
+                var space = await _spaceRepo.GetSpaceByLinkAsync(link);
                 await _authService.ValidateAuthorization(space.Id);
 
                 GrandResultResponseDto response = new()

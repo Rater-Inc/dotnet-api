@@ -1,5 +1,6 @@
 ﻿using Rater.Business.Services.Interfaces;
-using Rater.Data.Repositories.Interfaces;
+using Rater.Data.Repositories.MetricRepositories;
+using Rater.Data.Repositories.SpaceRepositories;
 using Rater.Domain.Models;
 
 namespace Rater.Business.Services
@@ -9,26 +10,19 @@ namespace Rater.Business.Services
 
         private readonly IMetricRepository _metricRepository;
         private readonly ISpaceRepository _spaceRepository;
-        public MetricService(IMetricRepository metricRepository , ISpaceRepository spaceRepository)
+        public MetricService(IMetricRepository metricRepository, ISpaceRepository spaceRepository)
         {
             _metricRepository = metricRepository;
             _spaceRepository = spaceRepository;
         }
 
 
-        public async Task<List<MetricModel>> GetMetrics(int space_id)
+        public async Task<List<MetricModel>> GetMetrics(int spaceId)
         {
-            if (await _spaceRepository.SpaceExist(space_id))
-            {
-                var value = await _metricRepository.GetAllMetrics(space_id);
-                return value;
-            }
+            if (await _spaceRepository.IsExistAsync(spaceId) is false) { throw new Exception("space does not exist"); }
 
-            else
-            {
-                throw new Exception("space does not exist");
-            }
-            
+            var value = await _metricRepository.GetAllMetricsAsync(spaceId);
+            return value;
         }
     }
 }
