@@ -12,7 +12,6 @@ namespace Rater.Business.Services
 
         private readonly IRatingRepository _repo;
         private readonly IUserService _userService;
-        private readonly IAuthService _authService;
         private readonly IMapper _mapper;
         public RatingService(
             IRatingRepository repo,
@@ -23,13 +22,11 @@ namespace Rater.Business.Services
             _repo = repo;
             _userService = userService;
             _mapper = mapper;
-            _authService = authService;
         }
 
 
         public async Task<RatingResponseDto> AddRatings(RatingRequestDto request)
         {
-            await _authService.ValidateAuthorization(request.SpaceId);
 
             if(request.RatingDetails == null || !request.RatingDetails.Any())
             {

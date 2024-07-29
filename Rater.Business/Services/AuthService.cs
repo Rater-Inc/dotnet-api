@@ -35,7 +35,6 @@ namespace Rater.Business.Services
                     response.Success = true;
                     response.spaceId = space.SpaceId;
                     response.jwtToken = CreateToken(space.SpaceId);
-                    await _tokenService.CreateToken(response.jwtToken);
                     return response;
                 }
 
@@ -75,16 +74,6 @@ namespace Rater.Business.Services
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
-
-        }
-
-
-        public async Task ValidateAuthorization(int spaceId)
-        {
-            if (_tokenService.GetSpaceIdFromToken() != spaceId || !await _tokenService.ValidateToken())
-            {
-                throw new UnauthorizedAccessException("Unauthorized for this space");
-            }
 
         }
 

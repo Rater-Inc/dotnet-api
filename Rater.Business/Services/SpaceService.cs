@@ -20,15 +20,13 @@ namespace Rater.Business.Services
         private readonly IParticipantService _participantService;
         private readonly IMapper _mapper;
         private readonly IMetricService _metricService;
-        private readonly IAuthService _authService;
         public SpaceService(
             ISpaceRepository spaceRepo,
             IUserService userService,
             IMetricService metricService,
             IRatingService ratingService,
             IParticipantService participantService,
-            IMapper mapper,
-            IAuthService authService)
+            IMapper mapper)
         {
             _spaceRepo = spaceRepo;
             _userService = userService;
@@ -36,14 +34,12 @@ namespace Rater.Business.Services
             _ratingService = ratingService;
             _participantService = participantService;
             _mapper = mapper;
-            _authService = authService;
         }
 
         public async Task<SpaceResponseDto> AddSpace(GrandSpaceRequestDto request)
         {
-            UserRequestDto userRequest = new UserRequestDto();
-            userRequest.NickName = request.creatorNickname;
-            var justCreatedUser = await _userService.CreateUser(userRequest);
+
+            var justCreatedUser = await _userService.CreateUser(new UserRequestDto { NickName = request.creatorNickname});
 
 
             var space = _mapper.Map<Space>(request);
@@ -73,7 +69,6 @@ namespace Rater.Business.Services
             try
             {
                 var value = await _spaceRepo.GetSpaceByLink(link);
-                await _authService.ValidateAuthorization(value.SpaceId);
                 var returner = _mapper.Map<SpaceResponseDto>(value);
                 return returner;
             }
@@ -96,7 +91,6 @@ namespace Rater.Business.Services
             try
             {
                 var space = await _spaceRepo.GetSpaceByLink(link);
-                await _authService.ValidateAuthorization(space.SpaceId);
 
                 GrandResultResponseDto response = new GrandResultResponseDto();
                 response.SpaceId = space.SpaceId;
