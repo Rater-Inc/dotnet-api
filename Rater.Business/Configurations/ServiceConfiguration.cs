@@ -36,8 +36,6 @@ namespace Rater.Business.Configurations
 
             services.AddScoped<IAuthService, AuthService>();
 
-            services.AddSingleton<IJwtTokenService, JwtTokenService>();
-
             return services;
         }
 

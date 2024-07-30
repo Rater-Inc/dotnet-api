@@ -12,13 +12,11 @@ namespace Rater.Business.Services
     public class AuthService : IAuthService
     {
         private readonly ISpaceRepository _spaceRepository;
-        private readonly IJwtTokenService _tokenService;
         private readonly IConfiguration _configuration;
         
-        public AuthService(ISpaceRepository spaceRepository,IJwtTokenService tokenService,IConfiguration configuration)
+        public AuthService(ISpaceRepository spaceRepository,IConfiguration configuration)
         {
             _spaceRepository = spaceRepository;
-            _tokenService = tokenService;
             _configuration = configuration;
         }
 
