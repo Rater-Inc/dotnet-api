@@ -14,7 +14,7 @@ namespace Rater.Data.Repositories.Decorator
     {
         private readonly RatingRepository _decorated;
         private readonly IMemoryCache _memoryCache;
-        public CachedRatingRepository(RatingRepository decorated , IMemoryCache memoryCache)
+        public CachedRatingRepository(RatingRepository decorated, IMemoryCache memoryCache)
         {
             _decorated = decorated;
             _memoryCache = memoryCache;
@@ -22,8 +22,15 @@ namespace Rater.Data.Repositories.Decorator
 
         public async Task<RatingResponseDto> AddRatings(List<Rating> request)
         {
-            return await _decorated.AddRatings(request);
+            var req = await _decorated.AddRatings(request);
+            string key = $"rating{req.spaceId}";
 
+            if (_memoryCache.TryGetValue(key, out _))
+            {
+                _memoryCache.Remove(key);
+            }
+
+            return req;
         }
 
         public async Task<List<Rating>> GetRatings(int space_id)
@@ -33,7 +40,7 @@ namespace Rater.Data.Repositories.Decorator
                 key,
                 async entry =>
                 {
-                    entry.SetAbsoluteExpiration(TimeSpan.FromSeconds(10));
+                    entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
                     return await _decorated.GetRatings(space_id);
                 });
             return cachedRatings == null ? throw new Exception("Failed to retrieve Space") : cachedRatings;
