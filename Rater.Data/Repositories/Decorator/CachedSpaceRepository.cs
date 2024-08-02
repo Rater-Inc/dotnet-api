@@ -15,7 +15,7 @@ namespace Rater.Data.Repositories.Decorator
     {
         private readonly SpaceRepository _decorated;
         private readonly IMemoryCache _memoryCache;
-        public CachedSpaceRepository(SpaceRepository decorated,IMemoryCache memoryCache)
+        public CachedSpaceRepository(SpaceRepository decorated, IMemoryCache memoryCache)
         {
             _decorated = decorated;
             _memoryCache = memoryCache;

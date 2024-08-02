@@ -19,7 +19,8 @@ namespace Rater.API.Controllers
 
         [HttpPost]
         [EnableRateLimiting("fixed")]
-        public async Task<ActionResult<AuthResponseDto>> AuthSpace (string link,string password) {
+        public async Task<ActionResult<AuthResponseDto>> AuthSpace(string link, string password)
+        {
 
             try
             {
@@ -32,7 +33,8 @@ namespace Rater.API.Controllers
                 throw new InvalidOperationException("Invalid operation: " + ex.Message);
             }
 
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
             }
 

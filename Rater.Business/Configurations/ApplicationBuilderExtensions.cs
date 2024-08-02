@@ -4,9 +4,9 @@ namespace Rater.Business.Configurations
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder AddGlobalErrorHandler (this IApplicationBuilder applicationBuilder)
+        public static IApplicationBuilder AddGlobalErrorHandler(this IApplicationBuilder applicationBuilder)
         {
-            applicationBuilder.UseMiddleware<GlobalExceptionHandlingMiddleware> ();
+            applicationBuilder.UseMiddleware<GlobalExceptionHandlingMiddleware>();
             return applicationBuilder;
         }
     }

@@ -8,7 +8,7 @@ using Rater.Domain.DataTransferObjects.UserDto;
 
 namespace Rater.Business.Profiles
 {
-    public class AutoMapperProfile : Profile 
+    public class AutoMapperProfile : Profile
     {
         public AutoMapperProfile()
         {

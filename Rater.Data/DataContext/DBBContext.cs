@@ -8,7 +8,7 @@ public partial class DBBContext : DbContext
 {
 
     private readonly IConfiguration _config;
-    public DBBContext(DbContextOptions<DBBContext> options , IConfiguration config)
+    public DBBContext(DbContextOptions<DBBContext> options, IConfiguration config)
         : base(options)
     {
         _config = config;

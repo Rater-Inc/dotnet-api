@@ -19,7 +19,7 @@ namespace Rater.Data.Repositories
 
         public async Task<RatingResponseDto> AddRatings(List<Rating> request)
         {
-            if(request.Any())
+            if (request.Any())
             {
                 foreach (var x in request)
                 {

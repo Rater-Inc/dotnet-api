@@ -16,7 +16,7 @@ namespace Rater.Business.Services
 
         public async Task<List<Participant>> GetParticipants(int space_id)
         {
-            if(await _spaceRepository.SpaceExist(space_id))
+            if (await _spaceRepository.SpaceExist(space_id))
             {
                 var value = await _participantRepository.GetParticipants(space_id);
                 return value;
