@@ -12,13 +12,11 @@ namespace Rater.Business.Services
     public class AuthService : IAuthService
     {
         private readonly ISpaceRepository _spaceRepository;
-        private readonly IJwtTokenService _tokenService;
         private readonly IConfiguration _configuration;
         
-        public AuthService(ISpaceRepository spaceRepository,IJwtTokenService tokenService,IConfiguration configuration)
+        public AuthService(ISpaceRepository spaceRepository,IConfiguration configuration)
         {
             _spaceRepository = spaceRepository;
-            _tokenService = tokenService;
             _configuration = configuration;
         }
 
@@ -35,7 +33,6 @@ namespace Rater.Business.Services
                     response.Success = true;
                     response.spaceId = space.SpaceId;
                     response.jwtToken = CreateToken(space.SpaceId);
-                    await _tokenService.CreateToken(response.jwtToken);
                     return response;
                 }
 
@@ -75,16 +72,6 @@ namespace Rater.Business.Services
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
-
-        }
-
-
-        public async Task ValidateAuthorization(int spaceId)
-        {
-            if (_tokenService.GetSpaceIdFromToken() != spaceId || !await _tokenService.ValidateToken())
-            {
-                throw new UnauthorizedAccessException("Unauthorized for this space");
-            }
 
         }
 
