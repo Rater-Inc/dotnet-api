@@ -21,8 +21,5 @@ namespace Rater.Domain.DataTransferObjects.SpaceDto
 
         public virtual ICollection<MetricResponseDto> Metrics { get; set; } = new List<MetricResponseDto>();
         public virtual ICollection<ParticipantResponseDto> Participants { get; set; } = new List<ParticipantResponseDto>();
-
-
-
     }
 }

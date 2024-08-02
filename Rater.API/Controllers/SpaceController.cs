@@ -32,14 +32,15 @@ namespace Rater.API.Controllers
             {
                 throw new InvalidOperationException(ex.Message);
             }
-            catch (ArgumentException ex )
+            catch (ArgumentException ex)
             {
                 throw new ArgumentException(ex.Message);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
             }
-            
+
 
         }
 
@@ -52,18 +53,19 @@ namespace Rater.API.Controllers
                 var value = await _service.GetSpace(link);
                 return Ok(value);
             }
-            catch(UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException ex)
             {
                 throw new UnauthorizedAccessException(ex.Message);
-            } 
-            catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
             }
-            
+
 
         }
 
-        [HttpPost("space-result") , Authorize(Policy = "SpaceIdentify")]
+        [HttpPost("space-result"), Authorize(Policy = "SpaceIdentify")]
         [EnableRateLimiting("fixed")]
         public async Task<ActionResult<GrandResultResponseDto>> GetSpaceResults(string link)
         {
@@ -76,10 +78,11 @@ namespace Rater.API.Controllers
             {
                 throw new UnauthorizedAccessException(ex.Message);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
             }
-            
+
 
         }
     }

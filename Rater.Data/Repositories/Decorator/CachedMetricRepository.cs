@@ -14,7 +14,7 @@ namespace Rater.Data.Repositories.Decorator
     {
         private readonly MetricRepository _decorated;
         private readonly IMemoryCache _memoryCache;
-        public CachedMetricRepository(MetricRepository decorated , IMemoryCache memoryCache)
+        public CachedMetricRepository(MetricRepository decorated, IMemoryCache memoryCache)
         {
             _decorated = decorated;
             _memoryCache = memoryCache;

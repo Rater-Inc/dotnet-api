@@ -13,22 +13,22 @@ namespace Rater.Business.Services
     {
         private readonly ISpaceRepository _spaceRepository;
         private readonly IConfiguration _configuration;
-        
-        public AuthService(ISpaceRepository spaceRepository,IConfiguration configuration)
+
+        public AuthService(ISpaceRepository spaceRepository, IConfiguration configuration)
         {
             _spaceRepository = spaceRepository;
             _configuration = configuration;
         }
 
 
-        public async Task<AuthResponseDto> AuthLobby (string link , string password)
+        public async Task<AuthResponseDto> AuthLobby(string link, string password)
         {
 
             try
             {
                 AuthResponseDto response = new AuthResponseDto();
                 var space = await _spaceRepository.GetSpaceByLink(link);
-                if(BCrypt.Net.BCrypt.Verify(password,space.Password))
+                if (BCrypt.Net.BCrypt.Verify(password, space.Password))
                 {
                     response.Success = true;
                     response.spaceId = space.SpaceId;
@@ -39,11 +39,12 @@ namespace Rater.Business.Services
                 return response;
 
             }
-            catch(InvalidOperationException ex)
+            catch (InvalidOperationException ex)
             {
                 throw new InvalidOperationException(ex.Message);
             }
-            catch (Exception ex){
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
             }
         }

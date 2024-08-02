@@ -18,7 +18,7 @@ namespace Rater.API.Controllers
         }
 
 
-        [HttpPost("add-ratings") , Authorize(Policy = "SpaceIdentify")]
+        [HttpPost("add-ratings"), Authorize(Policy = "SpaceIdentify")]
         [EnableRateLimiting("fixed")]
         public async Task<ActionResult<RatingResponseDto>> AddRatings(RatingRequestDto request)
         {
@@ -41,10 +41,11 @@ namespace Rater.API.Controllers
 
                 throw new ArgumentException(ex.Message);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
 
                 throw new Exception(ex.Message);
             }
-        } 
+        }
     }
 }

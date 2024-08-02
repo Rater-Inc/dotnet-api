@@ -10,7 +10,7 @@ namespace Rater.Data.Repositories
 
         private readonly DBBContext _context;
         IMapper _mapper;
-        public UserRepository(DBBContext context,IMapper mapper)
+        public UserRepository(DBBContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

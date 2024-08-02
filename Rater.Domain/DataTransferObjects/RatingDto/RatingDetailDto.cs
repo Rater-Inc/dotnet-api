@@ -12,4 +12,3 @@ namespace Rater.Domain.DataTransferObjects.RatingDto
         public int Score { get; set; }
     }
 }
-    

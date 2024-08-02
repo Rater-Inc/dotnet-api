@@ -24,19 +24,19 @@ namespace Rater.Business.Configurations
 
         }
 
-        public async Task Invoke (HttpContext context)
+        public async Task Invoke(HttpContext context)
         {
             try
             {
                 await _next(context);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 await HandleExceptionAsync(context, ex);
             }
         }
 
-        public async Task HandleExceptionAsync(HttpContext context , Exception ex)
+        public async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             var exceptionType = ex.GetType();
             var statusCode = _exceptionStatusCodeMapping.ContainsKey(exceptionType)

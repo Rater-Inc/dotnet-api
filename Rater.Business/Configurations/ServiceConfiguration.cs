@@ -21,7 +21,7 @@ namespace Rater.Business.Configurations
             services.AddMemoryCache();
 
             services.AddScoped<SpaceRepository>();
-            services.AddScoped<ISpaceRepository,CachedSpaceRepository>();
+            services.AddScoped<ISpaceRepository, CachedSpaceRepository>();
             services.AddScoped<ISpaceService, SpaceService>();
 
             services.AddScoped<RatingRepository>();
@@ -39,14 +39,15 @@ namespace Rater.Business.Configurations
             services.AddScoped<IParticipantRepository, CachedParticipantRepository>();
             services.AddScoped<IParticipantService, ParticipantService>();
 
-            
+
 
             services.AddScoped<IAuthService, AuthService>();
 
             return services;
         }
 
-        public static IServiceCollection AddRedisServices(this IServiceCollection services, IConfiguration configuration) {
+        public static IServiceCollection AddRedisServices(this IServiceCollection services, IConfiguration configuration)
+        {
 
             var redisConnectionString = configuration.GetSection("ConnectionStrings:RedisConnection").Value!;
             var redis = ConnectionMultiplexer.Connect(redisConnectionString);
