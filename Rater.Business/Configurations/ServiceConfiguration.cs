@@ -9,6 +9,7 @@ using RedLockNet.SERedis.Configuration;
 using RedLockNet.SERedis;
 using RedLockNet;
 using StackExchange.Redis;
+using Rater.Data.Repositories.Decorator;
 
 namespace Rater.Business.Configurations
 {
@@ -17,31 +18,36 @@ namespace Rater.Business.Configurations
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<DBBContext>();
+            services.AddMemoryCache();
 
-
-            services.AddScoped<ISpaceRepository, SpaceRepository>();
+            services.AddScoped<SpaceRepository>();
+            services.AddScoped<ISpaceRepository, CachedSpaceRepository>();
             services.AddScoped<ISpaceService, SpaceService>();
 
-            services.AddScoped<IMetricRepository, MetricRepository>();
+            services.AddScoped<RatingRepository>();
+            services.AddScoped<IRatingRepository, CachedRatingRepository>();
+            services.AddScoped<IRatingService, RatingService>();
+
+            services.AddScoped<MetricRepository>();
+            services.AddScoped<IMetricRepository, CachedMetricRepository>();
             services.AddScoped<IMetricService, MetricService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
 
-            services.AddScoped<IParticipantRepository, ParticipantRepository>();
+            services.AddScoped<ParticipantRepository>();
+            services.AddScoped<IParticipantRepository, CachedParticipantRepository>();
             services.AddScoped<IParticipantService, ParticipantService>();
 
-            services.AddScoped<IRatingRepository, RatingRepository>();
-            services.AddScoped<IRatingService, RatingService>();
+
 
             services.AddScoped<IAuthService, AuthService>();
-
-            services.AddSingleton<IJwtTokenService, JwtTokenService>();
 
             return services;
         }
 
-        public static IServiceCollection AddRedisServices(this IServiceCollection services, IConfiguration configuration) {
+        public static IServiceCollection AddRedisServices(this IServiceCollection services, IConfiguration configuration)
+        {
 
             var redisConnectionString = configuration.GetSection("ConnectionStrings:RedisConnection").Value!;
             var redis = ConnectionMultiplexer.Connect(redisConnectionString);

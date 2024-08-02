@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApplicationServices(builder.Configuration);
-builder.Services.AddRedisServices(builder.Configuration);
+//builder.Services.AddRedisServices(builder.Configuration);
 builder.Services.AddApplicationRateLimiter();
 builder.Services.AddSwaggerServices();
 builder.Services.AddJwtAuthentication(builder.Configuration);
@@ -40,5 +40,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.AddGlobalErrorHandler();
 
 app.Run();

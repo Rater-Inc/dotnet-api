@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Rater.Business.Services.Interfaces;
 using Rater.Domain.DataTransferObjects.AuthDto;
@@ -20,7 +19,8 @@ namespace Rater.API.Controllers
 
         [HttpPost]
         [EnableRateLimiting("fixed")]
-        public async Task<ActionResult<AuthResponseDto>> AuthSpace (string link,string password) {
+        public async Task<ActionResult<AuthResponseDto>> AuthSpace(string link, string password)
+        {
 
             try
             {
@@ -30,11 +30,12 @@ namespace Rater.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest("Invalid operation: " + ex.Message);
+                throw new InvalidOperationException("Invalid operation: " + ex.Message);
             }
 
-            catch (Exception ex) { 
-                return BadRequest(ex.Message);
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
 
         }

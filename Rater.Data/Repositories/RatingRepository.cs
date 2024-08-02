@@ -3,11 +3,6 @@ using Rater.API;
 using Rater.Data.DataContext;
 using Rater.Data.Repositories.Interfaces;
 using Rater.Domain.DataTransferObjects.RatingDto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rater.Data.Repositories
 {
@@ -24,7 +19,7 @@ namespace Rater.Data.Repositories
 
         public async Task<RatingResponseDto> AddRatings(List<Rating> request)
         {
-            if(request.Any())
+            if (request.Any())
             {
                 foreach (var x in request)
                 {

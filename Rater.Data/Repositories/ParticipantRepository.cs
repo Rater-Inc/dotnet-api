@@ -3,11 +3,6 @@ using Rater.API;
 using Rater.Data.DataContext;
 using Rater.Data.Repositories.Interfaces;
 using Rater.Domain.DataTransferObjects.ParticipantDto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rater.Data.Repositories
 {
@@ -15,7 +10,7 @@ namespace Rater.Data.Repositories
     {
         private readonly DBBContext _context;
         private readonly IMapper _mapper;
-        public ParticipantRepository(DBBContext context , IMapper mapper)
+        public ParticipantRepository(DBBContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

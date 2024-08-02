@@ -1,12 +1,6 @@
 ﻿using Rater.API;
 using Rater.Business.Services.Interfaces;
 using Rater.Data.Repositories.Interfaces;
-using Rater.Domain.DataTransferObjects.ParticipantDto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rater.Business.Services
 {
@@ -22,7 +16,7 @@ namespace Rater.Business.Services
 
         public async Task<List<Participant>> GetParticipants(int space_id)
         {
-            if(await _spaceRepository.SpaceExist(space_id))
+            if (await _spaceRepository.SpaceExist(space_id))
             {
                 var value = await _participantRepository.GetParticipants(space_id);
                 return value;

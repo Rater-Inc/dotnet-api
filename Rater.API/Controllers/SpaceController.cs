@@ -1,12 +1,9 @@
-﻿using AutoMapper.Configuration.Annotations;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Rater.Business.Services.Interfaces;
 using Rater.Domain.DataTransferObjects.ResultDto;
 using Rater.Domain.DataTransferObjects.SpaceDto;
-using Rater.Domain.DataTransferObjects.UserDto;
 
 namespace Rater.API.Controllers
 {
@@ -31,14 +28,19 @@ namespace Rater.API.Controllers
                 var value = await _service.AddSpace(request);
                 return value;
             }
-            catch(ArgumentException ex )
+            catch (InvalidOperationException ex)
             {
-                return BadRequest(ex.Message);
+                throw new InvalidOperationException(ex.Message);
             }
-            catch (Exception ex) {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException(ex.Message);
             }
-            
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
 
         }
 
@@ -51,18 +53,19 @@ namespace Rater.API.Controllers
                 var value = await _service.GetSpace(link);
                 return Ok(value);
             }
-            catch(UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(ex.Message);
-            } 
-            catch (Exception ex) {
-                return BadRequest(ex.Message);
+                throw new UnauthorizedAccessException(ex.Message);
             }
-            
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
 
         }
 
-        [HttpPost("space-result") , Authorize(Policy = "SpaceIdentify")]
+        [HttpPost("space-result"), Authorize(Policy = "SpaceIdentify")]
         [EnableRateLimiting("fixed")]
         public async Task<ActionResult<GrandResultResponseDto>> GetSpaceResults(string link)
         {
@@ -73,12 +76,13 @@ namespace Rater.API.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(ex.Message);
+                throw new UnauthorizedAccessException(ex.Message);
             }
-            catch (Exception ex) {
-                return BadRequest(ex.Message);
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
-            
+
 
         }
     }

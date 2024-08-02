@@ -1,19 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Rater.API;
 using Rater.Business.Services.Interfaces;
 using Rater.Data.Repositories.Interfaces;
 using Rater.Domain.DataTransferObjects.RatingDto;
 using Rater.Domain.DataTransferObjects.UserDto;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rater.Business.Services
 {
@@ -22,7 +12,6 @@ namespace Rater.Business.Services
 
         private readonly IRatingRepository _repo;
         private readonly IUserService _userService;
-        private readonly IAuthService _authService;
         private readonly IMapper _mapper;
         public RatingService(
             IRatingRepository repo,
@@ -33,15 +22,13 @@ namespace Rater.Business.Services
             _repo = repo;
             _userService = userService;
             _mapper = mapper;
-            _authService = authService;
         }
 
 
         public async Task<RatingResponseDto> AddRatings(RatingRequestDto request)
         {
-            await _authService.ValidateAuthorization(request.SpaceId);
 
-            if(request.RatingDetails == null || !request.RatingDetails.Any())
+            if (request.RatingDetails == null || !request.RatingDetails.Any())
             {
                 throw new ArgumentException("Rating values are empty");
             }
@@ -64,7 +51,8 @@ namespace Rater.Business.Services
 
                 var invalidScores = ratings.Where(e => e.Score <= 0 || e.Score > 5).ToList();
 
-                if (invalidScores.Any()) {
+                if (invalidScores.Any())
+                {
                     throw new ArgumentException($"Found {invalidScores.Count} scores not between 1 and 5");
                 }
 
@@ -72,7 +60,7 @@ namespace Rater.Business.Services
                 return returner;
 
             }
-            catch(InvalidOperationException ex)
+            catch (InvalidOperationException ex)
             {
                 throw new InvalidOperationException(ex.Message);
             }
@@ -80,7 +68,8 @@ namespace Rater.Business.Services
             {
                 throw new UnauthorizedAccessException(ex.Message);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
 
                 throw new Exception(ex.Message);
             }

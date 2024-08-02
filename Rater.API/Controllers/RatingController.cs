@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Rater.Business.Services.Interfaces;
 using Rater.Domain.DataTransferObjects.RatingDto;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace Rater.API.Controllers
 {
@@ -21,7 +18,7 @@ namespace Rater.API.Controllers
         }
 
 
-        [HttpPost("add-ratings") , Authorize(Policy = "SpaceIdentify")]
+        [HttpPost("add-ratings"), Authorize(Policy = "SpaceIdentify")]
         [EnableRateLimiting("fixed")]
         public async Task<ActionResult<RatingResponseDto>> AddRatings(RatingRequestDto request)
         {
@@ -33,28 +30,22 @@ namespace Rater.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex.Message);
+                throw new InvalidOperationException(ex.Message);
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(ex.Message);
+                throw new UnauthorizedAccessException(ex.Message);
             }
             catch (ArgumentException ex)
             {
 
-                return BadRequest(ex.Message);
+                throw new ArgumentException(ex.Message);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
 
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                throw new Exception(ex.Message);
             }
-
-            
-
-            
-        } 
-
-
-
+        }
     }
 }

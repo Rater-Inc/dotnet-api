@@ -1,12 +1,6 @@
 ﻿using Rater.API;
 using Rater.Business.Services.Interfaces;
 using Rater.Data.Repositories.Interfaces;
-using Rater.Domain.DataTransferObjects.MetricDto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rater.Business.Services
 {
@@ -15,7 +9,7 @@ namespace Rater.Business.Services
 
         private readonly IMetricRepository _metricRepository;
         private readonly ISpaceRepository _spaceRepository;
-        public MetricService(IMetricRepository metricRepository , ISpaceRepository spaceRepository)
+        public MetricService(IMetricRepository metricRepository, ISpaceRepository spaceRepository)
         {
             _metricRepository = metricRepository;
             _spaceRepository = spaceRepository;
@@ -34,7 +28,7 @@ namespace Rater.Business.Services
             {
                 throw new Exception("space does not exist");
             }
-            
+
         }
     }
 }

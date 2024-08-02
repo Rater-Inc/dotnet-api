@@ -1,6 +1,4 @@
 ﻿global using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Rater.API;
 
@@ -10,7 +8,7 @@ public partial class DBBContext : DbContext
 {
 
     private readonly IConfiguration _config;
-    public DBBContext(DbContextOptions<DBBContext> options , IConfiguration config)
+    public DBBContext(DbContextOptions<DBBContext> options, IConfiguration config)
         : base(options)
     {
         _config = config;

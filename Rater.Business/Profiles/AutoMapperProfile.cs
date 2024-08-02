@@ -8,7 +8,7 @@ using Rater.Domain.DataTransferObjects.UserDto;
 
 namespace Rater.Business.Profiles
 {
-    public class AutoMapperProfile : Profile 
+    public class AutoMapperProfile : Profile
     {
         public AutoMapperProfile()
         {
@@ -52,7 +52,6 @@ namespace Rater.Business.Profiles
 
             CreateMap<Metric, MetricResponseDto>()
                 .ForMember(dest => dest.MetricId, opt => opt.MapFrom(src => src.MetricId))
-                .ForMember(dest => dest.SpaceId, opt => opt.MapFrom(src => src.SpaceId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                 .ReverseMap();

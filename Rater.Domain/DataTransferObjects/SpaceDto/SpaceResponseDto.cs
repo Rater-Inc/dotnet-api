@@ -1,11 +1,5 @@
-﻿using Rater.API;
-using Rater.Domain.DataTransferObjects.MetricDto;
+﻿using Rater.Domain.DataTransferObjects.MetricDto;
 using Rater.Domain.DataTransferObjects.ParticipantDto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rater.Domain.DataTransferObjects.SpaceDto
 {
@@ -27,8 +21,5 @@ namespace Rater.Domain.DataTransferObjects.SpaceDto
 
         public virtual ICollection<MetricResponseDto> Metrics { get; set; } = new List<MetricResponseDto>();
         public virtual ICollection<ParticipantResponseDto> Participants { get; set; } = new List<ParticipantResponseDto>();
-
-
-
     }
 }
