@@ -39,9 +39,13 @@ namespace Rater.Business.Configurations
             services.AddScoped<IParticipantRepository, CachedParticipantRepository>();
             services.AddScoped<IParticipantService, ParticipantService>();
 
-
-
             services.AddScoped<IAuthService, AuthService>();
+
+
+            services.AddFluentValidationAutoValidation()
+                .AddFluentValidationClientsideAdapters()
+                .AddValidatorsFromAssemblyContaining<RatingRequestDtoValidator>()
+                .AddValidatorsFromAssemblyContaining<GrandSpaceRequestDtoValidator>();
 
             return services;
         }
