@@ -8,27 +8,27 @@ namespace Rater.Business.Services
     {
 
         private readonly IMetricRepository _metricRepository;
-        private readonly ISpaceRepository _spaceRepository;
-        public MetricService(IMetricRepository metricRepository, ISpaceRepository spaceRepository)
+        public MetricService(IMetricRepository metricRepository)
         {
             _metricRepository = metricRepository;
-            _spaceRepository = spaceRepository;
         }
 
 
         public async Task<List<Metric>> GetMetrics(int space_id)
         {
-            if (await _spaceRepository.SpaceExist(space_id))
+            var value = await _metricRepository.GetAllMetrics(space_id);
+            if (value == null)
             {
-                var value = await _metricRepository.GetAllMetrics(space_id);
-                return value;
+                throw new InvalidOperationException("Couldn't retrieve metrics.");
             }
+            return value;
 
-            else
-            {
-                throw new Exception("space does not exist");
-            }
+        }
 
+        public async Task<List<Metric>> GetMetricsGivenIds(List<int> metricsIds)
+        {
+            var value = await _metricRepository.GetMetricsGivenIds(metricsIds);
+            return value;
         }
     }
 }

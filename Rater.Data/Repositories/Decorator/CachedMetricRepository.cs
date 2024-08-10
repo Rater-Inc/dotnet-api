@@ -2,11 +2,6 @@
 using Rater.API;
 using Rater.Data.Repositories.Interfaces;
 using Rater.Domain.DataTransferObjects.MetricDto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rater.Data.Repositories.Decorator
 {
@@ -20,14 +15,26 @@ namespace Rater.Data.Repositories.Decorator
             _memoryCache = memoryCache;
         }
 
-        public Task<List<MetricResponseDto>> CreateMetrics(List<MetricRequestDto> request)
+        public async Task<List<MetricResponseDto>> CreateMetrics(List<MetricRequestDto> request)
         {
-            return _decorated.CreateMetrics(request);
+            return await _decorated.CreateMetrics(request);
         }
 
-        public async Task<List<Metric>> GetAllMetrics(int space_id)
+        public async Task<List<Metric>> GetMetricsGivenIds(List<int> metricsIds)
+        {
+            return await _decorated.GetMetricsGivenIds(metricsIds);
+        }
+
+        public async Task<List<Metric>?> GetAllMetrics(int space_id)
         {
             string key = $"metric{space_id}";
+            if (_memoryCache.TryGetValue(key, out List<Metric>? isCached))
+            {
+                if (isCached == null)
+                {
+                    _memoryCache.Remove(key);
+                }
+            }
             var cachedMetrics = await _memoryCache.GetOrCreateAsync(
                 key,
                 async entry =>

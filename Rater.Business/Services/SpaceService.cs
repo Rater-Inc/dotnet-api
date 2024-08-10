@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using RandomString4Net;
 using Rater.API;
 using Rater.Business.Services.Interfaces;
 using Rater.Data.Repositories.Interfaces;
 using Rater.Domain.DataTransferObjects.MetricDto;
 using Rater.Domain.DataTransferObjects.ParticipantDto;
+using Rater.Domain.DataTransferObjects.RatingDto;
 using Rater.Domain.DataTransferObjects.ResultDto;
 using Rater.Domain.DataTransferObjects.SpaceDto;
 using Rater.Domain.DataTransferObjects.UserDto;
@@ -38,10 +40,7 @@ namespace Rater.Business.Services
 
         public async Task<SpaceResponseDto> AddSpace(GrandSpaceRequestDto request)
         {
-
             var justCreatedUser = await _userService.CreateUser(new UserRequestDto { NickName = request.creatorNickname });
-
-
             var space = _mapper.Map<Space>(request);
             space.CreatorId = justCreatedUser.UserId;
 
@@ -55,8 +54,10 @@ namespace Rater.Business.Services
                 participants.SpaceId = space.SpaceId;
             }
 
-            var finalRequest = _mapper.Map<SpaceRequestDto>(space);
-            var result = await _spaceRepo.CreateSpace(finalRequest);
+            space.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            space.Link =  RandomString.GetString(Types.ALPHANUMERIC_LOWERCASE);
+
+            var result = await _spaceRepo.CreateSpace(space);
 
             return result;
         }
@@ -150,28 +151,83 @@ namespace Rater.Business.Services
                 }
 
                 response.ParticipantResults = response.ParticipantResults.OrderByDescending(e => e.AverageScore).ToList();
-
                 return response;
             }
-
             catch (UnauthorizedAccessException ex)
             {
                 throw new UnauthorizedAccessException(ex.Message);
             }
-
             catch (Exception ex)
             {
-
                 throw new Exception(ex.Message);
-
             }
-
-
-
         }
 
+        public async Task<RatingResponseDto> AddRatings(RatingRequestDto request)
+        {
+            try
+            {
+                var metricIds = request.RatingDetails.Select(x => x.MetricId).ToList();
+                var participantIds = request.RatingDetails.Select(x => x.RateeId).ToList();
 
+                var metrics = await _metricService.GetMetricsGivenIds(metricIds);
+                var participants = await _participantService.GetParticipantsGivenIds(participantIds);
 
+                var metricsDict = metrics.ToDictionary(m => m.MetricId);
+                var participantsDict = participants.ToDictionary(p => p.ParticipantId);
 
+                foreach (var x in request.RatingDetails)
+                {
+                    if (!metricsDict.TryGetValue(x.MetricId, out var metric) || metric.SpaceId != request.SpaceId)
+                    {
+                        throw new InvalidOperationException("The request payload does not match the provided space ID for metric.");
+                    }
+
+                    if (!participantsDict.TryGetValue(x.RateeId, out var participant) || participant.SpaceId != request.SpaceId)
+                    {
+                        throw new InvalidOperationException("The request payload does not match the provided space ID for participant.");
+                    }
+                }
+
+                var user = await _userService.CreateUser(new UserRequestDto { NickName = request.RaterNickName });
+
+                var ratings = request.RatingDetails.Select(e =>
+                {
+                    var rating = _mapper.Map<Rating>(e);
+                    rating.RaterId = user.UserId;
+                    rating.SpaceId = request.SpaceId;
+                    return rating;
+
+                }).ToList();
+
+                var returner = await _ratingService.AddRatings(ratings);
+                return returner;
+
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw new UnauthorizedAccessException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> SpaceExist(int space_id)
+        {
+            var result = await _spaceRepo.SpaceExist(space_id);
+            return result;
+        }
+
+        public async Task<Space> GetSpaceByLink(string link)
+        {
+            var result = await _spaceRepo.GetSpaceByLink(link);
+            return result;
+        }
     }
 }
