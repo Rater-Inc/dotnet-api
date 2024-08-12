@@ -20,7 +20,7 @@ namespace Rater.Data.Repositories.Decorator
             _decorated = decorated;
             _memoryCache = memoryCache;
         }
-        public async Task<SpaceResponseDto> CreateSpace(SpaceRequestDto request)
+        public async Task<SpaceResponseDto> CreateSpace(Space request)
         {
             return await _decorated.CreateSpace(request);
         }

@@ -10,6 +10,12 @@ using RedLockNet.SERedis;
 using RedLockNet;
 using StackExchange.Redis;
 using Rater.Data.Repositories.Decorator;
+using Microsoft.AspNetCore.Authorization;
+using Rater.API;
+using Rater.Business.Validator.Dto.Rating;
+using Rater.Business.Validator.Dto.Space;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 
 namespace Rater.Business.Configurations
 {
@@ -39,9 +45,14 @@ namespace Rater.Business.Configurations
             services.AddScoped<IParticipantRepository, CachedParticipantRepository>();
             services.AddScoped<IParticipantService, ParticipantService>();
 
-
-
             services.AddScoped<IAuthService, AuthService>();
+
+            services.AddSingleton<IAuthorizationMiddlewareResultHandler, AuthorizationMiddlewareResultHandler>();
+
+            services.AddFluentValidationAutoValidation()
+                .AddFluentValidationClientsideAdapters()
+                .AddValidatorsFromAssemblyContaining<RatingRequestDtoValidator>()
+                .AddValidatorsFromAssemblyContaining<GrandSpaceRequestDtoValidator>();
 
             return services;
         }

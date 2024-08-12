@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rater.API", "Rater.API\Rate
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B34C97F6-BDF2-461E-9080-934347779196}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rater.Test", "Rater.Test\Rater.Test.csproj", "{739D035C-F5DE-4E56-A592-B8230D17CA1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{D4F5321F-D84B-4638-AE4B-6401062B90FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4F5321F-D84B-4638-AE4B-6401062B90FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4F5321F-D84B-4638-AE4B-6401062B90FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{739D035C-F5DE-4E56-A592-B8230D17CA1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{739D035C-F5DE-4E56-A592-B8230D17CA1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{739D035C-F5DE-4E56-A592-B8230D17CA1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{739D035C-F5DE-4E56-A592-B8230D17CA1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

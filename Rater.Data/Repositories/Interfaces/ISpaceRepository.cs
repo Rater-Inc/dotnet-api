@@ -11,7 +11,7 @@ namespace Rater.Data.Repositories.Interfaces
     public interface ISpaceRepository
     {
 
-        Task<SpaceResponseDto> CreateSpace(SpaceRequestDto request);
+        Task<SpaceResponseDto> CreateSpace(Space request);
         Task<Space> GetSpaceByLink(string link);
         Task<bool> SpaceExist(int space_id);
 

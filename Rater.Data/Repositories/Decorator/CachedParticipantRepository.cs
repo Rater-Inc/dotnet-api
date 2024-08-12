@@ -25,9 +25,21 @@ namespace Rater.Data.Repositories.Decorator
             return await _decorated.CreateParticipants(request);
         }
 
-        public async Task<List<Participant>> GetParticipants(int space_id)
+        public async Task<List<Participant>> GetParticipantsGivenIds(List<int> participantIds)
+        {
+            return await _decorated.GetParticipantsGivenIds(participantIds);
+        }
+
+        public async Task<List<Participant>?> GetParticipants(int space_id)
         {
             string key = $"participant{space_id}";
+            if (_memoryCache.TryGetValue(key, out List<Participant>? isCached))
+            {
+                if (isCached == null)
+                {
+                    _memoryCache.Remove(key);
+                }
+            }
             var cachedParticipants = await _memoryCache.GetOrCreateAsync(
                 key,
                 async entry =>
