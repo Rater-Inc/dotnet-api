@@ -7,26 +7,25 @@ namespace Rater.Business.Services
     public class ParticipantService : IParticipantService
     {
         private readonly IParticipantRepository _participantRepository;
-        private readonly ISpaceRepository _spaceRepository;
-        public ParticipantService(IParticipantRepository participantRepository, ISpaceRepository spaceRepository)
+        public ParticipantService(IParticipantRepository participantRepository)
         {
             _participantRepository = participantRepository;
-            _spaceRepository = spaceRepository;
         }
 
         public async Task<List<Participant>> GetParticipants(int space_id)
         {
-            if (await _spaceRepository.SpaceExist(space_id))
+            var value = await _participantRepository.GetParticipants(space_id);
+            if (value == null)
             {
-                var value = await _participantRepository.GetParticipants(space_id);
-                return value;
-
+                throw new InvalidOperationException("Couldn't retrieve participants.");
             }
+            return value;
+        }
 
-            else
-            {
-                throw new Exception("space does not exist");
-            }
+        public async Task<List<Participant>> GetParticipantsGivenIds(List<int> participantIds)
+        {
+            var value = await _participantRepository.GetParticipantsGivenIds(participantIds);
+            return value;
         }
     }
 }

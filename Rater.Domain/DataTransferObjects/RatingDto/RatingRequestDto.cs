@@ -5,11 +5,8 @@ namespace Rater.Domain.DataTransferObjects.RatingDto
 {
     public class RatingRequestDto
     {
-        [Required]
-        public string RaterNickName { get; set; } = null!;
-        [Required]
+        public string RaterNickName { get; set; } = string.Empty;
         public int SpaceId { get; set; }
-        [Required]
-        public List<RatingDetailDto>? RatingDetails { get; set; }
+        public List<RatingDetailDto> RatingDetails { get; set; } = new List<RatingDetailDto>();
     }
 }

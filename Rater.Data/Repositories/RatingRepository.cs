@@ -19,36 +19,18 @@ namespace Rater.Data.Repositories
 
         public async Task<RatingResponseDto> AddRatings(List<Rating> request)
         {
-            if (request.Any())
+
+            await _context.Ratings.AddRangeAsync(request);
+            await _context.SaveChangesAsync();
+
+            var spaceId = request[0].SpaceId;
+
+            return new RatingResponseDto
             {
-                foreach (var x in request)
-                {
-                    var metric = await _context.Metrics.Where(e => e.MetricId == x.MetricId).FirstOrDefaultAsync();
-                    var participant = await _context.Participants.Where(e => e.ParticipantId == x.RateeId).FirstOrDefaultAsync();
-
-                    if (metric?.SpaceId != x.SpaceId || participant?.SpaceId != x.SpaceId)
-                    {
-                        throw new InvalidOperationException("The request payload does not match the provided space ID.");
-                    }
-                }
-                await _context.Ratings.AddRangeAsync(request);
-                await _context.SaveChangesAsync();
-
-                var spaceId = request[0].SpaceId;
-
-                return new RatingResponseDto
-                {
-                    success = true,
-                    spaceId = spaceId,
-                    ratingCount = request.Count()
-                };
-
-            }
-
-            else
-            {
-                throw new Exception("Request is empty");
-            }
+                success = true,
+                spaceId = spaceId,
+                ratingCount = request.Count()
+            };
         }
 
         public async Task<List<Rating>> GetRatings(int space_id)

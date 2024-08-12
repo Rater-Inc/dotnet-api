@@ -11,12 +11,12 @@ namespace Rater.Business.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly ISpaceRepository _spaceRepository;
+        private readonly ISpaceService _spaceService;
         private readonly IConfiguration _configuration;
 
-        public AuthService(ISpaceRepository spaceRepository, IConfiguration configuration)
+        public AuthService(ISpaceService spaceService, IConfiguration configuration)
         {
-            _spaceRepository = spaceRepository;
+            _spaceService = spaceService;
             _configuration = configuration;
         }
 
@@ -27,7 +27,7 @@ namespace Rater.Business.Services
             try
             {
                 AuthResponseDto response = new AuthResponseDto();
-                var space = await _spaceRepository.GetSpaceByLink(link);
+                var space = await _spaceService.GetSpaceByLink(link);
                 if (BCrypt.Net.BCrypt.Verify(password, space.Password))
                 {
                     response.Success = true;

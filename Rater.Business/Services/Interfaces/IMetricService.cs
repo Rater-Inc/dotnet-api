@@ -1,15 +1,10 @@
 ﻿using Rater.API;
-using Rater.Domain.DataTransferObjects.MetricDto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rater.Business.Services.Interfaces
 {
     public interface IMetricService
     {
         Task<List<Metric>> GetMetrics(int space_id);
+        Task<List<Metric>> GetMetricsGivenIds(List<int> metricsIds);
     }
 }

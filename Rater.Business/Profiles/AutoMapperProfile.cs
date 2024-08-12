@@ -27,17 +27,6 @@ namespace Rater.Business.Profiles
                 .ForMember(dest => dest.Metrics, opt => opt.MapFrom(src => src.Metrics))
                 .ReverseMap();
 
-
-            CreateMap<Space, SpaceRequestDto>()
-                .ForMember(dest => dest.CreatorId, opt => opt.MapFrom(src => src.CreatorId))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-                .ForMember(dest => dest.IsLocked, opt => opt.MapFrom(src => src.IsLocked))
-                .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password))
-                .ForMember(dest => dest.Metrics, opt => opt.MapFrom(src => src.Metrics))
-                .ForMember(dest => dest.Participants, opt => opt.MapFrom(src => src.Participants))
-                .ReverseMap();
-
             CreateMap<Space, GrandSpaceRequestDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
@@ -126,11 +115,6 @@ namespace Rater.Business.Profiles
             CreateMap<User, UserRequestDto>()
                 .ForMember(dest => dest.NickName, opt => opt.MapFrom(src => src.Nickname))
                 .ReverseMap();
-
-
-
-
-
         }
 
     }

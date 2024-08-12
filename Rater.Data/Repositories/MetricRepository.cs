@@ -18,7 +18,7 @@ namespace Rater.Data.Repositories
         }
 
 
-        public async Task<List<Metric>> GetAllMetrics(int space_id)
+        public async Task<List<Metric>?> GetAllMetrics(int space_id)
         {
 
             var metrics = await _context.Metrics
@@ -26,7 +26,7 @@ namespace Rater.Data.Repositories
                 .Include(e => e.Ratings)
                 .ToListAsync();
 
-            return metrics;
+            return metrics.Any() ? metrics : null;
         }
 
         public async Task<List<MetricResponseDto>> CreateMetrics(List<MetricRequestDto> request)
@@ -39,6 +39,14 @@ namespace Rater.Data.Repositories
             var result = metrics.Select(e => _mapper.Map<MetricResponseDto>(e)).ToList();
             return result;
 
+        }
+
+        public async Task<List<Metric>> GetMetricsGivenIds(List<int> metricsIds)
+        {
+            var metrics = await _context.Metrics
+                            .Where(m => metricsIds.Contains(m.MetricId))
+                            .ToListAsync();
+            return metrics;
         }
 
 
