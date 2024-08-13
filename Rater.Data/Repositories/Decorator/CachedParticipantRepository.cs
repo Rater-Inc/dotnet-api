@@ -30,7 +30,7 @@ namespace Rater.Data.Repositories.Decorator
             return await _decorated.GetParticipantsGivenIds(participantIds);
         }
 
-        public async Task<List<Participant>?> GetParticipants(int space_id)
+        public async Task<List<Participant>> GetAllParticipants(int space_id)
         {
             string key = $"participant{space_id}";
             if (_memoryCache.TryGetValue(key, out List<Participant>? isCached))
@@ -45,7 +45,7 @@ namespace Rater.Data.Repositories.Decorator
                 async entry =>
                 {
                     entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
-                    return await _decorated.GetParticipants(space_id);
+                    return await _decorated.GetAllParticipants(space_id);
                 });
             return cachedParticipants == null ? throw new Exception("Failed to retrieve Space") : cachedParticipants;
 

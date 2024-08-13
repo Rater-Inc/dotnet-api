@@ -11,7 +11,7 @@ namespace Rater.Data.Repositories.Interfaces
     public interface IParticipantRepository
     {
         Task<List<ParticipantResponseDto>> CreateParticipants(List<ParticipantRequestDto> request);
-        Task<List<Participant>?> GetParticipants(int space_id);
+        Task<List<Participant>> GetAllParticipants(int space_id);
         Task<List<Participant>> GetParticipantsGivenIds(List<int> participantIds);
     }
 }
