@@ -28,10 +28,9 @@ namespace Rater.Data.Repositories
             return result;
         }
 
-        public async Task<Space> GetSpaceByLink(string link)
+        public async Task<Space?> GetSpaceByLink(string link)
         {
             var space = await _context.Spaces.Where(s => s.Link == link).Include(e => e.Creator).Include(e => e.Metrics).Include(e => e.Participants).FirstOrDefaultAsync();
-            if (space == null) throw new Exception("Space could not found");
             return space;
         }
 
