@@ -93,6 +93,8 @@ namespace Rater.Business.Services
             {
                 var space = await _spaceRepo.GetSpaceByLink(link);
 
+                if (space == null) throw new InvalidOperationException();
+
                 GrandResultResponseDto response = new GrandResultResponseDto();
                 response.SpaceId = space.SpaceId;
                 response.Name = space.Name;
@@ -224,7 +226,7 @@ namespace Rater.Business.Services
             return result;
         }
 
-        public async Task<Space> GetSpaceByLink(string link)
+        public async Task<Space?> GetSpaceByLink(string link)
         {
             var result = await _spaceRepo.GetSpaceByLink(link);
             return result;

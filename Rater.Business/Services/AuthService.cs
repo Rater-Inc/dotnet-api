@@ -28,14 +28,16 @@ namespace Rater.Business.Services
             {
                 AuthResponseDto response = new AuthResponseDto();
                 var space = await _spaceService.GetSpaceByLink(link);
-                if (BCrypt.Net.BCrypt.Verify(password, space.Password))
+                if(space != null)
                 {
-                    response.Success = true;
-                    response.spaceId = space.SpaceId;
-                    response.jwtToken = CreateToken(space.SpaceId);
-                    return response;
+                    if (BCrypt.Net.BCrypt.Verify(password, space.Password))
+                    {
+                        response.Success = true;
+                        response.spaceId = space.SpaceId;
+                        response.jwtToken = CreateToken(space.SpaceId);
+                        return response;
+                    }
                 }
-
                 return response;
 
             }
