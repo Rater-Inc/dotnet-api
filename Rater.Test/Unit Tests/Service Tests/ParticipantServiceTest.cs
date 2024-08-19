@@ -2,7 +2,6 @@
 using FluentAssertions;
 using Rater.API;
 using Rater.Business.Services;
-using Rater.Data.Repositories;
 using Rater.Data.Repositories.Interfaces;
 
 namespace Rater.Test.Unit_Tests.Service_Tests
@@ -84,7 +83,7 @@ namespace Rater.Test.Unit_Tests.Service_Tests
         {
             //Arrange
 
-            var list = new List<int> { 1,2,3 };
+            var list = new List<int> { 1, 2, 3 };
 
             var expectedParticipants = new List<Participant>
             {
@@ -131,7 +130,7 @@ namespace Rater.Test.Unit_Tests.Service_Tests
         }
 
         [Fact]
-        public async Task MetricService_GetMetricsGivenIds_WhenParticipantsAreEmpty()
+        public async Task MetricService_GetMetricsGivenIds_WhenRepositoryParticipantsAreEmpty()
         {
             //Arrange
 
@@ -147,6 +146,5 @@ namespace Rater.Test.Unit_Tests.Service_Tests
                 .Should().ThrowAsync<InvalidOperationException>()
                 .WithMessage("Couldn't retrieve participants.");
         }
-
     }
 }
