@@ -93,7 +93,8 @@ namespace Rater.Business.Services
             {
                 var space = await _spaceRepo.GetSpaceByLink(link);
 
-                if (space == null) throw new InvalidOperationException();
+                if (space == null)
+                    throw new InvalidOperationException("Space not found for the given link.");
 
                 GrandResultResponseDto response = new GrandResultResponseDto();
                 response.SpaceId = space.SpaceId;
@@ -158,6 +159,10 @@ namespace Rater.Business.Services
             catch (UnauthorizedAccessException ex)
             {
                 throw new UnauthorizedAccessException(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
             }
             catch (Exception ex)
             {
