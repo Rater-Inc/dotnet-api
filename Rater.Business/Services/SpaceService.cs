@@ -117,21 +117,30 @@ namespace Rater.Business.Services
                     if (metricRatings.Any())
                     {
                         var averageScore = metricRatings
-                            .GroupBy(e => e.Ratee)
+                            .GroupBy(e => e.RateeId)  // Change this from e.Ratee to e.RateeId
                             .Select(g => new
                             {
-                                Ratee = g.Key,
+                                RateeId = g.Key,
                                 AverageScore = g.Average(r => r.Score)
                             })
                             .OrderByDescending(x => x.AverageScore)
                             .FirstOrDefault();
 
-                        metric.LeaderParticipant = _mapper.Map<ParticipantResponseDto>(averageScore?.Ratee);
-                        metric.Score = averageScore?.AverageScore ?? 0;
+                        if (averageScore != null)
+                        {
+                            var leaderParticipant = participants.FirstOrDefault(p => p.ParticipantId == averageScore.RateeId);
+                            metric.LeaderParticipant = _mapper.Map<ParticipantResponseDto>(leaderParticipant);
+                            metric.Score = averageScore.AverageScore;
+                        }
+                        else
+                        {
+                            metric.LeaderParticipant = new ParticipantResponseDto();
+                            metric.Score = 0;
+                        }
                     }
                     else
                     {
-                        metric.LeaderParticipant = null;
+                        metric.LeaderParticipant = new ParticipantResponseDto();
                         metric.Score = 0;
                     }
                 }
