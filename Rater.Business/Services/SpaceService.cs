@@ -93,6 +93,9 @@ namespace Rater.Business.Services
             {
                 var space = await _spaceRepo.GetSpaceByLink(link);
 
+                if (space == null)
+                    throw new InvalidOperationException("Space not found for the given link.");
+
                 GrandResultResponseDto response = new GrandResultResponseDto();
                 response.SpaceId = space.SpaceId;
                 response.Name = space.Name;
@@ -114,21 +117,30 @@ namespace Rater.Business.Services
                     if (metricRatings.Any())
                     {
                         var averageScore = metricRatings
-                            .GroupBy(e => e.Ratee)
+                            .GroupBy(e => e.RateeId)  // Change this from e.Ratee to e.RateeId
                             .Select(g => new
                             {
-                                Ratee = g.Key,
+                                RateeId = g.Key,
                                 AverageScore = g.Average(r => r.Score)
                             })
                             .OrderByDescending(x => x.AverageScore)
                             .FirstOrDefault();
 
-                        metric.LeaderParticipant = _mapper.Map<ParticipantResponseDto>(averageScore?.Ratee);
-                        metric.Score = averageScore?.AverageScore ?? 0;
+                        if (averageScore != null)
+                        {
+                            var leaderParticipant = participants.FirstOrDefault(p => p.ParticipantId == averageScore.RateeId);
+                            metric.LeaderParticipant = _mapper.Map<ParticipantResponseDto>(leaderParticipant);
+                            metric.Score = averageScore.AverageScore;
+                        }
+                        else
+                        {
+                            metric.LeaderParticipant = new ParticipantResponseDto();
+                            metric.Score = 0;
+                        }
                     }
                     else
                     {
-                        metric.LeaderParticipant = null;
+                        metric.LeaderParticipant = new ParticipantResponseDto();
                         metric.Score = 0;
                     }
                 }
@@ -156,6 +168,10 @@ namespace Rater.Business.Services
             catch (UnauthorizedAccessException ex)
             {
                 throw new UnauthorizedAccessException(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
             }
             catch (Exception ex)
             {
@@ -224,7 +240,7 @@ namespace Rater.Business.Services
             return result;
         }
 
-        public async Task<Space> GetSpaceByLink(string link)
+        public async Task<Space?> GetSpaceByLink(string link)
         {
             var result = await _spaceRepo.GetSpaceByLink(link);
             return result;

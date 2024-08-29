@@ -11,7 +11,7 @@ namespace Rater.Business.Services.Interfaces
         Task<SpaceResponseDto> GetSpace(string link);
         Task<GrandResultResponseDto> GetSpaceResults(string link);
         Task<RatingResponseDto> AddRatings(RatingRequestDto request);
-        Task<Space> GetSpaceByLink(string link);
+        Task<Space?> GetSpaceByLink(string link);
         Task<bool> SpaceExist(int space_id);
     }
 }

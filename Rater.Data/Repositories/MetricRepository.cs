@@ -18,7 +18,7 @@ namespace Rater.Data.Repositories
         }
 
 
-        public async Task<List<Metric>?> GetAllMetrics(int space_id)
+        public async Task<List<Metric>> GetAllMetrics(int space_id)
         {
 
             var metrics = await _context.Metrics
@@ -26,7 +26,7 @@ namespace Rater.Data.Repositories
                 .Include(e => e.Ratings)
                 .ToListAsync();
 
-            return metrics.Any() ? metrics : null;
+            return metrics;
         }
 
         public async Task<List<MetricResponseDto>> CreateMetrics(List<MetricRequestDto> request)
