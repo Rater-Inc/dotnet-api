@@ -11,16 +11,10 @@ namespace Rater.Business.Services
     {
 
         private readonly IRatingRepository _repo;
-        private readonly IUserService _userService;
-        private readonly IMapper _mapper;
         public RatingService(
-            IRatingRepository repo,
-            IUserService userService,
-            IMapper mapper)
+            IRatingRepository repo)
         {
             _repo = repo;
-            _userService = userService;
-            _mapper = mapper;
         }
 
 

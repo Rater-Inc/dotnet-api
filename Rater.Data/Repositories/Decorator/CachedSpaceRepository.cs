@@ -25,7 +25,7 @@ namespace Rater.Data.Repositories.Decorator
             return await _decorated.CreateSpace(request);
         }
 
-        public async Task<Space> GetSpaceByLink(string link)
+        public async Task<Space?> GetSpaceByLink(string link)
         {
             string key = $"space{link}";
             var cachedSpace = await _memoryCache.GetOrCreateAsync(
@@ -35,7 +35,7 @@ namespace Rater.Data.Repositories.Decorator
                     entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
                     return await _decorated.GetSpaceByLink(link);
                 });
-            return cachedSpace == null ? throw new Exception("Failed to retrieve Space") : cachedSpace;
+            return cachedSpace;
         }
 
         public async Task<bool> SpaceExist(int space_id)

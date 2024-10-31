@@ -17,7 +17,7 @@ namespace Rater.Business.Services
         public async Task<List<Metric>> GetMetrics(int space_id)
         {
             var value = await _metricRepository.GetAllMetrics(space_id);
-            if (value == null)
+            if (!value.Any())
             {
                 throw new InvalidOperationException("Couldn't retrieve metrics.");
             }
@@ -28,6 +28,10 @@ namespace Rater.Business.Services
         public async Task<List<Metric>> GetMetricsGivenIds(List<int> metricsIds)
         {
             var value = await _metricRepository.GetMetricsGivenIds(metricsIds);
+            if (!value.Any())
+            {
+                throw new InvalidOperationException("Couldn't retrieve metrics.");
+            }
             return value;
         }
     }

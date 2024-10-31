@@ -25,7 +25,7 @@ namespace Rater.Data.Repositories.Decorator
             return await _decorated.GetMetricsGivenIds(metricsIds);
         }
 
-        public async Task<List<Metric>?> GetAllMetrics(int space_id)
+        public async Task<List<Metric>> GetAllMetrics(int space_id)
         {
             string key = $"metric{space_id}";
             if (_memoryCache.TryGetValue(key, out List<Metric>? isCached))
