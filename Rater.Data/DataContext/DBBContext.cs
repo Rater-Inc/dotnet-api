@@ -32,7 +32,6 @@ public partial class DBBContext : DbContext
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasPostgresExtension("pg_catalog", "adminpack");
 
         modelBuilder.Entity<Metric>(entity =>
         {
