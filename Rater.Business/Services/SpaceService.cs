@@ -245,5 +245,11 @@ namespace Rater.Business.Services
             var result = await _spaceRepo.GetSpaceByLink(link);
             return result;
         }
+
+        public async Task<string?> GetSpaceNameByLink(string link)
+        {
+            var space = await _spaceRepo.GetSpaceByLink(link);
+            return space?.Name;
+        }
     }
 }
