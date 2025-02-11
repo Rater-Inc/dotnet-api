@@ -114,5 +114,17 @@ namespace Rater.API.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
+        [HttpGet("get-space-name-by-link")]
+        public async Task<ActionResult> GetSpaceNameByLink(string link)
+        {
+            var value = await _service.GetSpaceNameByLink(link);
+            if (value != null)
+            {
+                return Ok(value);
+            }
+
+            return BadRequest();
+        }
     }
 }
